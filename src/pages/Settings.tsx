@@ -1,7 +1,10 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
+import { useUser } from '../hooks/useUser';
 import userThree from '../images/user/user-03.png';
 
 const Settings = () => {
+  const user = useUser();
+
   return (
     <>
       <div className="mx-auto max-w-270">
@@ -57,7 +60,7 @@ const Settings = () => {
                           name="fullName"
                           id="fullName"
                           placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
+                          value={user?.fullName}
                         />
                       </div>
                     </div>
@@ -75,7 +78,7 @@ const Settings = () => {
                         name="phoneNumber"
                         id="phoneNumber"
                         placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
+                        value={user?.phone}
                       />
                     </div>
                   </div>
@@ -119,7 +122,7 @@ const Settings = () => {
                         name="emailAddress"
                         id="emailAddress"
                         placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
+                        value={user?.email}
                       />
                     </div>
                   </div>
@@ -137,7 +140,7 @@ const Settings = () => {
                       name="Username"
                       id="Username"
                       placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
+                      value={user?.username}
                     />
                   </div>
 
@@ -186,8 +189,9 @@ const Settings = () => {
                         id="bio"
                         rows={6}
                         placeholder="Write your bio here"
-                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
-                      ></textarea>
+                      >
+                        {user?.description}
+                      </textarea>
                     </div>
                   </div>
 

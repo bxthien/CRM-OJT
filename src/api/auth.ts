@@ -54,19 +54,16 @@ export const useLogout = () => {
 export const useGetMe = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await instanceAxios.get<User>('user/profile');
-        if (response.data) {
-          console.log('user/profile', response.data);
-          dispatch(setUser(response.data));
-        }
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
+  const fetchUser = async () => {
+    try {
+      const response = await instanceAxios.get<User>('user/profile');
+      if (response.data) {
+        dispatch(setUser(response.data));
       }
-    };
+    } catch (err) {
+      console.error('Error fetching user profile:', err);
+    }
+  };
 
-    fetchUser();
-  }, [dispatch]);
+  return { fetchUser };
 };

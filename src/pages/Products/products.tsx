@@ -1,36 +1,23 @@
-import { Button, Card, Image, Input, Space, Table } from 'antd';
-import type { TableProps } from 'antd';
+import { Card, Input, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { getProduct, getProductDetail } from '../../api/product';
-// import EditIC from '../../assets/svgs/write.svg';
 import { ProductType } from '../../interface/product';
-// import DrawerProductDetail from "../../components/Modal/ModalProductDetail";
 import {
-  ActionType,
   ProTable,
   ProColumns,
-  RequestData,
   TableDropdown,
-  ProDescriptions,
 } from '@ant-design/pro-components';
 import './products.css';
 import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { CiCircleMore } from 'react-icons/ci';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import StyledButton from '../../components/Common/Button';
+import DrawerProductDetail from '../../components/Modal/ModalProductDetail';
 
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [productDetail, setProductDetail] = useState<ProductType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleActionClick = async (id: string) => {
-    try {
-      const productDetail = await getProductDetail(id);
-      setProductDetail(productDetail);
-      showModal();
-    } catch (error) {
-      console.error('Error fetching product details:', error);
-    }
-  };
 
   enum ActionKey {
     DELETE = 'delete',
@@ -99,15 +86,23 @@ const Products = () => {
             },
           ]}
         >
-          <Icon component={CiCircleMore} className="text-rfprimary text-xl" />
+          <Icon component={CiCircleMore} className="text-primary text-xl" />
         </TableDropdown>
       ),
     },
   ];
 
-  const handleActionOnSelect = (key: string, product: ProductType) => {
-    if (key === ActionKey.DELETE) {
-    }
+  const handleActionOnSelect = async (key: string, product: ProductType) => {
+    // if (key === ActionKey.DELETE) {
+    // } else if (key === ActionKey.VIEW) {
+    //   try {
+    //     const productDetail = await getProductDetail(product.id);
+    //     setProductDetail(productDetail);
+    //     showModal();
+    //   } catch (error) {
+    //     console.error('Error fetching product details:', error);
+    //   }
+    // }
   };
 
   const showModal = () => {
@@ -136,17 +131,17 @@ const Products = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* <DrawerProductDetail
+    <div className="flex flex-col">
+      <DrawerProductDetail
         product={productDetail}
         isDrawerOpen={isModalOpen}
-        handleO={handleOk}
+        handleOk={handleOk}
         handleCancel={handleCancel}
-      /> */}
+      />
+      <Breadcrumb pageName="Products" />
       <Card
         bordered={false}
-        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white"
-        title="Products"
+        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6"
       >
         <div className="table-responsive dark:bg-boxdark">
           <div className="flex gap-3 mx-6">
@@ -162,9 +157,7 @@ const Products = () => {
               className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
               placeholder="Search by product name"
             />
-            <Button className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 border-none ">
-              Search
-            </Button>
+            <StyledButton>Search</StyledButton>
           </div>
           <ProTable
             columns={columns}

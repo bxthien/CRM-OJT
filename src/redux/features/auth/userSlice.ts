@@ -5,6 +5,8 @@ interface User {
   username: string;
   email: string;
   fullName: string;
+  description: string;
+  avatar: string;
 }
 
 interface UserState {
