@@ -16,6 +16,7 @@ import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import Products from './pages/Products/products';
 import Dashboard from './pages/Dashboard/dashboard';
+import Users from './pages/User/user';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -43,6 +44,7 @@ function App() {
         <Route path="/tables" element={<Tables />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/chart" element={<Chart />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/ui/alerts" element={<Alerts />} />
         <Route path="/ui/buttons" element={<Buttons />} />
         <Route path="/auth/signin" element={<SignIn />} />
