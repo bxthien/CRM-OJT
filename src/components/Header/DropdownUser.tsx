@@ -3,11 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
 import UserOne from '../../images/user/user-01.png';
 import { useLogout } from '../../api/auth';
+import { useUser } from '../../hooks/useUser';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { logOut } = useLogout();
+
+  const user = useUser();
 
   const handleLogout = () => {
     logOut();
@@ -23,9 +26,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {user?.username}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs"> {user?.email}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
@@ -52,7 +55,7 @@ const DropdownUser = () => {
       {/* <!-- Dropdown Start --> */}
       {dropdownOpen && (
         <div
-          className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
+          className={`absolute right-0 mt-4 flex w-45 rounded-lg flex-col border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
         >
           <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
             <li>

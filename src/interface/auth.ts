@@ -8,6 +8,7 @@ export interface User {
   url: string;
   description: string;
   avatar: string;
+  isActive: boolean
 }
 
 export interface UserProfile {

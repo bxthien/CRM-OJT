@@ -11,6 +11,7 @@ import Settings from '../pages/Settings';
 import Chart from '../pages/Chart';
 import Alerts from '../pages/UiElements/Alerts';
 import Buttons from '../pages/UiElements/Buttons';
+import Users from '../pages/User/user';
 
 const PrivateLayout = lazy(
   () => import('../components/layouts/PrivateLayout/PrivateLayout'),
@@ -71,6 +72,10 @@ const routes = [
       {
         path: '/ui/buttons',
         element: <Buttons />,
+      },
+      {
+        path: '/users',
+        element: <Users/>,
       },
     ],
   } as Route,

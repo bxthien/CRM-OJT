@@ -1,0 +1,46 @@
+.ant-card .ant-card-head {
+  border: none;
+}
+
+.dark .ant-table-thead tr > th {
+  @apply dark:bg-strokedark;
+  color: #8c8c8c;
+}
+
+.dark .ant-table-tbody tr > td {
+  color: white !important;
+}
+
+.ant-table-tbody tr > td {
+  @apply dark:bg-boxdark;
+}
+
+.ant-table-tbody .ant-table-row > .ant-table-cell-row-hover {
+  @apply dark:bg-strokedark;
+}
+
+.dark .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #2e3a47; /* Dark mode */
+}
+
+.ant-spin-container,
+.ant-pro-card {
+  @apply dark:bg-boxdark;
+}
+
+.dark .ant-table-thead > tr > th {
+  border-bottom: 1px solid #2e3a47;
+}
+
+.dark .tablespace .ant-card-head-title {
+  color: white;
+}
+
+.ant-card .ant-card-head,
+.ant-table-thead tr > th,
+.ant-table-tbody tr > td,
+.ant-spin-container,
+.ant-pro-card,
+.tablespace .ant-card-head-title {
+  @apply transition-colors duration-300; /* Smooth transition */
+}
