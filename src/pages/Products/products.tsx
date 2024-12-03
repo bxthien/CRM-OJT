@@ -1,21 +1,19 @@
-import { Button, Card, Image, Input, Space, Table } from 'antd';
+import { Button, Card, Input, Space } from 'antd';
 import type { TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { getProduct, getProductDetail } from '../../api/product';
-// import EditIC from '../../assets/svgs/write.svg';
 import { ProductType } from '../../interface/product';
-// import DrawerProductDetail from "../../components/Modal/ModalProductDetail";
 import {
-  ActionType,
   ProTable,
   ProColumns,
-  RequestData,
   TableDropdown,
-  ProDescriptions,
 } from '@ant-design/pro-components';
 import './products.css';
 import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { CiCircleMore } from 'react-icons/ci';
+import DrawerProductDetail from './ModalProductDetail';
+import { Modal } from 'antd';
+import { getProduct, getProductDetail } from '../../api/product';
+import { deleteProduct } from '../../constants/product';
 
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
@@ -32,10 +30,62 @@ const Products = () => {
     }
   };
 
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
+      console.log(`Product with ID ${id} deleted successfully.`);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
+  const confirmDelete = (id: string) => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this product?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => handleDeleteProduct(id),
+    });
+  };
+
   enum ActionKey {
     DELETE = 'delete',
     VIEW = 'view',
   }
+
+  const handleActionOnSelect = async (key: string, product: ProductType) => {
+    if (key === ActionKey.VIEW) {
+      await handleActionClick(product.id);
+    } else if (key === ActionKey.DELETE) {
+      confirmDelete(product.id);
+    }
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await getProduct();
+        setProducts(data);
+      } catch (err) {
+        console.log('Error fetching products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const columns: ProColumns[] = [
     {
@@ -105,44 +155,14 @@ const Products = () => {
     },
   ];
 
-  const handleActionOnSelect = (key: string, product: ProductType) => {
-    if (key === ActionKey.DELETE) {
-    }
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await getProduct();
-        setProducts(data);
-      } catch (err) {
-        console.log('err', err);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
   return (
     <div className="flex flex-col gap-4">
-      {/* <DrawerProductDetail
+      <DrawerProductDetail
         product={productDetail}
         isDrawerOpen={isModalOpen}
-        handleO={handleOk}
+        handleOk={handleOk}
         handleCancel={handleCancel}
-      /> */}
+      />
       <Card
         bordered={false}
         className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white"
