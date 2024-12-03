@@ -1,5 +1,4 @@
-import { Button, Card, Input, Space } from 'antd';
-import type { TableProps } from 'antd';
+import { Card, Input, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { ProductType } from '../../interface/product';
 import {
@@ -14,6 +13,8 @@ import DrawerProductDetail from './ModalProductDetail';
 import { Modal } from 'antd';
 import { getProduct, getProductDetail } from '../../api/product';
 import { deleteProduct } from '../../constants/product';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import StyledButton from '../../components/Common/Button';
 
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
@@ -149,7 +150,7 @@ const Products = () => {
             },
           ]}
         >
-          <Icon component={CiCircleMore} className="text-rfprimary text-xl" />
+          <Icon component={CiCircleMore} className="text-primary text-xl" />
         </TableDropdown>
       ),
     },
@@ -163,10 +164,10 @@ const Products = () => {
         handleOk={handleOk}
         handleCancel={handleCancel}
       />
+      <Breadcrumb pageName="Products" />
       <Card
         bordered={false}
-        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white"
-        title="Products"
+        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6"
       >
         <div className="table-responsive dark:bg-boxdark">
           <div className="flex gap-3 mx-6">
@@ -182,9 +183,7 @@ const Products = () => {
               className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
               placeholder="Search by product name"
             />
-            <Button className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 border-none ">
-              Search
-            </Button>
+            <StyledButton>Search</StyledButton>
           </div>
           <ProTable
             columns={columns}

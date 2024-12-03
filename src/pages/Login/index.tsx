@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
-import { useSignIn, SignInPayload } from '../../api/auth';
+import { useSignIn, SignInPayload, useGetMe } from '../../api/auth';
 import { message, Form, Button, Input } from 'antd';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signIn } = useSignIn();
+  const { fetchUser } = useGetMe();
 
   const handleSubmit = async (values: SignInPayload) => {
     setLoading(true);
@@ -17,6 +18,7 @@ const Login = () => {
       if (response) {
         message.success('Login successful!');
         navigate('/');
+        fetchUser();
       }
     } catch (err) {
       console.error(err);
