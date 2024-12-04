@@ -1,6 +1,12 @@
-import { Button, Drawer, Form, Input, Select } from "antd";
-import { useEffect } from "react";
+import { Button, Drawer, Form, Input, Select, message } from "antd";
+import { useEffect, useState } from "react";
 import { ProductType } from "../../interface/product";
+import { getCategories } from "../../api/categories";
+
+interface CategoryType {
+  id: string;
+  name: string;
+}
 
 interface Prop {
   product?: ProductType;
@@ -12,49 +18,76 @@ interface Prop {
 const DrawerProductDetail = ({
   product,
   isDrawerOpen,
-  // handleOk,
+  handleOk,
   handleCancel,
 }: Prop) => {
   const [form] = Form.useForm();
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
+  // Fetch categories when the drawer opens
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (err) {
+        console.log("err", err);
+      }
+    };
+    if (isDrawerOpen) {
+      fetchCategories();
+    }
+  }, [isDrawerOpen]);
+
+  // Populate form when product changes
   useEffect(() => {
     if (product) {
       form.setFieldsValue({
         name: product.name,
         price: product.price,
         quantity: product.quantity,
+        category: product.category?.id, // Set category ID
         info: {
           color: product.info?.color?.join(", "),
           size: product.info?.size,
           description: product.info?.description,
         },
       });
+    } else {
+      form.resetFields();
     }
   }, [product, form]);
 
-  // const onFinish = (values: any) => {
-  //   const updatedProduct = {
-  //     ...product,
-  //     ...values,
-  //     info: {
-  //       ...product?.info,
-  //       ...values.info,
-  //     },
-  //   };
-  //   handleOk(updatedProduct); // Pass updated product back
-  // };
+  const onFinish = (values: any) => {
+    const updatedProduct = {
+      ...product,
+      ...values,
+      category: {
+        id: values.category,
+        name: categories.find(cat => cat.id === values.category)?.name || '',
+      },
+      info: {
+        ...product?.info,
+        color: values.info.color ? values.info.color.split(", ") : [],
+        size: values.info.size,
+        description: values.info.description,
+      },
+    };
+    handleOk(updatedProduct);
+  };
 
   return (
     <Drawer
       title="Product Detail"
       placement="right"
       onClose={handleCancel}
-      visible={isDrawerOpen}
+      open={isDrawerOpen}
       width={600}
       footer={
-        <div className="flex gap-2 float-right">
-          <Button>Cancel</Button>
-          <Button type="primary">Update</Button>
+        <div className="flex gap-2 justify-end">
+          <Button type="primary" onClick={() => form.submit()}>
+            Update
+          </Button>
         </div>
       }
     >
@@ -65,13 +98,14 @@ const DrawerProductDetail = ({
           name: product?.name,
           price: product?.price,
           quantity: product?.quantity,
+          category: product?.category,
           info: {
             color: product?.info?.color?.join(", "),
             size: product?.info?.size,
             description: product?.info?.description,
           },
         }}
-        // onFinish={onFinish}
+        onFinish={onFinish}
       >
         <Form.Item
           label="Name"
@@ -79,6 +113,23 @@ const DrawerProductDetail = ({
           rules={[{ required: true, message: "Please enter the product name" }]}
         >
           <Input placeholder="Enter product name" />
+        </Form.Item>
+
+        <Form.Item
+          label="Category"
+          name="category"
+          rules={[{ required: true, message: "Please select a category" }]}
+        >
+          <Select 
+            placeholder="Select product category"
+            allowClear
+          >
+            {categories.map(category => (
+              <Select.Option key={category.id} value={category.id}>
+                {category.name}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -109,13 +160,11 @@ const DrawerProductDetail = ({
             placeholder="Select product color(s)"
             allowClear
           >
-            {/* Add your available color options here */}
             <Select.Option value="Red">Red</Select.Option>
-            <Select.Option value="blue">Blue</Select.Option>
-            <Select.Option value="green">Green</Select.Option>
-            <Select.Option value="yellow">Yellow</Select.Option>
-            <Select.Option value="black">Black</Select.Option>
-            {/* Add more colors as needed */}
+            <Select.Option value="Blue">Blue</Select.Option>
+            <Select.Option value="Green">Green</Select.Option>
+            <Select.Option value="Yellow">Yellow</Select.Option>
+            <Select.Option value="Black">Black</Select.Option>
           </Select>
         </Form.Item>
 

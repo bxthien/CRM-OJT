@@ -1,4 +1,4 @@
-import { Card, Input, Space } from 'antd';
+import { Card, Input, message, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { ProductType } from '../../interface/product';
 import {
@@ -12,7 +12,7 @@ import { CiCircleMore } from 'react-icons/ci';
 import DrawerProductDetail from './ModalProductDetail';
 import { Modal } from 'antd';
 import { getProduct, getProductDetail } from '../../api/product';
-import { deleteProduct } from '../../constants/product';
+import { deleteProduct, updateProduct } from '../../constants/product';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StyledButton from '../../components/Common/Button';
 
@@ -20,6 +20,25 @@ const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [productDetail, setProductDetail] = useState<ProductType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleUpdateProduct = async (updatedProduct: ProductType) => {
+    try {
+      const updatedData = await updateProduct(updatedProduct.id, updatedProduct);
+      message.success("Product updated successfully!"); 
+
+      // Cập nhật danh sách sản phẩm
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === updatedProduct.id ? updatedData : product
+        )
+      );
+
+    } catch (error) {
+      message.error("Failed to update product. Please try again."); // Thông báo lỗi
+      console.error("Error updating product:", error);
+    }
+  };
+
 
   const handleActionClick = async (id: string) => {
     try {
@@ -65,10 +84,6 @@ const Products = () => {
 
   const showModal = () => {
     setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -155,13 +170,14 @@ const Products = () => {
       ),
     },
   ];
+  
 
   return (
     <div className="flex flex-col gap-4">
       <DrawerProductDetail
         product={productDetail}
         isDrawerOpen={isModalOpen}
-        handleOk={handleOk}
+        handleOk={handleUpdateProduct}
         handleCancel={handleCancel}
       />
       <Breadcrumb pageName="Products" />

@@ -1,4 +1,5 @@
 import instanceAxios from "../config/axios";
+import { ProductType } from "../interface/product";
 
 export const getProduct = async () => {
   try {
@@ -31,3 +32,13 @@ export const deleteProduct = async (id: string) => {
     throw error;
   }
 };
+
+export const updateProduct = async (id: string, product: ProductType) => {
+    try {
+      const response = await instanceAxios.patch(`/product/${id}`, product);
+      return response.data; 
+    } catch (error) {
+      console.error("Error updating product:", error);
+      throw error;
+  };
+}

@@ -7,7 +7,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants/auth';
 // axios.defaults.baseURL = BASE_URL;
 
 const instanceAxios = axios.create({
-  baseURL: 'https://7633-113-160-225-96.ngrok-free.app',
+  baseURL: 'https://27a1-113-160-225-96.ngrok-free.app',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'Access-Control-Allow-Origin': '*',
