@@ -1,6 +1,5 @@
-import { Card, Input, Space } from 'antd';
+import { Card, Input, message, Space } from 'antd';
 import { useEffect, useState } from 'react';
-import { getProduct, getProductDetail } from '../../api/product';
 import { ProductType } from '../../interface/product';
 import {
   ProTable,
@@ -10,19 +9,99 @@ import {
 import './products.css';
 import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { CiCircleMore } from 'react-icons/ci';
+import DrawerProductDetail from './ModalProductDetail';
+import { Modal } from 'antd';
+import { getProduct, getProductDetail } from '../../api/product';
+import { deleteProduct, updateProduct } from '../../constants/product';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StyledButton from '../../components/Common/Button';
-import DrawerProductDetail from '../../components/Modal/ModalProductDetail';
 
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [productDetail, setProductDetail] = useState<ProductType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleUpdateProduct = async (updatedProduct: ProductType) => {
+    try {
+      const updatedData = await updateProduct(updatedProduct.id, updatedProduct);
+      message.success("Product updated successfully!"); 
+
+      // Cập nhật danh sách sản phẩm
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === updatedProduct.id ? updatedData : product
+        )
+      );
+
+    } catch (error) {
+      message.error("Failed to update product. Please try again."); // Thông báo lỗi
+      console.error("Error updating product:", error);
+    }
+  };
+
+
+  const handleActionClick = async (id: string) => {
+    try {
+      const productDetail = await getProductDetail(id);
+      setProductDetail(productDetail);
+      showModal();
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
+      console.log(`Product with ID ${id} deleted successfully.`);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
+  const confirmDelete = (id: string) => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this product?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => handleDeleteProduct(id),
+    });
+  };
+
   enum ActionKey {
     DELETE = 'delete',
     VIEW = 'view',
   }
+
+  const handleActionOnSelect = async (key: string, product: ProductType) => {
+    if (key === ActionKey.VIEW) {
+      await handleActionClick(product.id);
+    } else if (key === ActionKey.DELETE) {
+      confirmDelete(product.id);
+    }
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await getProduct();
+        setProducts(data);
+      } catch (err) {
+        console.log('Error fetching products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const columns: ProColumns[] = [
     {
@@ -91,51 +170,14 @@ const Products = () => {
       ),
     },
   ];
-
-  const handleActionOnSelect = async (key: string, product: ProductType) => {
-    // if (key === ActionKey.DELETE) {
-    // } else if (key === ActionKey.VIEW) {
-    //   try {
-    //     const productDetail = await getProductDetail(product.id);
-    //     setProductDetail(productDetail);
-    //     showModal();
-    //   } catch (error) {
-    //     console.error('Error fetching product details:', error);
-    //   }
-    // }
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await getProduct();
-        setProducts(data);
-      } catch (err) {
-        console.log('err', err);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       <DrawerProductDetail
         product={productDetail}
         isDrawerOpen={isModalOpen}
-        handleOk={handleOk}
+        handleOk={handleUpdateProduct}
         handleCancel={handleCancel}
       />
       <Breadcrumb pageName="Products" />
