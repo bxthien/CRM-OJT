@@ -17,11 +17,13 @@ export interface UserProfile {
 }
 
 export interface SignInResponse {
+  roles: string;
   access_token: string;
   refresh_token: string;
   user: {
     id: string;
     email: string;
+    roles: string;
   };
 }
 
