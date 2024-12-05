@@ -3,11 +3,9 @@ import { getStorageData } from '../storage';
 import { API_URL } from '../../constants/url';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants/auth';
 
-// const BASE_URL = 'https://be-final-project-bddr.onrender.com';
-// axios.defaults.baseURL = BASE_URL;
 
 const instanceAxios = axios.create({
-  baseURL: 'https://7633-113-160-225-96.ngrok-free.app',
+  baseURL: 'https://37b3-113-160-225-96.ngrok-free.app',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'Access-Control-Allow-Origin': '*',

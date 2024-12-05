@@ -1,4 +1,4 @@
-import { CiGlass } from "react-icons/ci";
+
 import instanceAxios from "../config/axios";
 import { User } from "../interface/auth";
 
@@ -34,7 +34,7 @@ export const changeActive = async (id: string) => {
 };
 export const deleteUser = async (id: string) => {
   try {
-    const response = await instanceAxios.delete(`/user/${id}`);
+    const response = await instanceAxios.patch(`/user/delete`, {id});
     return response.data;
   } catch (error) {
     console.error("Error deleting user:", error);
@@ -42,9 +42,9 @@ export const deleteUser = async (id: string) => {
   }
 };
 
-export const updateUser = async (userId: string, userData: Partial<User>) => {
+export const updateUser = async (id: string, userData: Partial<User>) => {
   try {
-    const response = await instanceAxios.put(`/user/${userId}`, userData);
+    const response = await instanceAxios.put(`/user/update/${id}`, userData);
     return response.data;
   } catch (error) {
     console.error("Error updating user:", error);

@@ -61,7 +61,7 @@ const Users = () => {
           onChange={() => handleActive(record.id)}
         />
       ),
-    },    
+    },
     {
       title: "Action",
       key: "option",
@@ -100,7 +100,14 @@ const Users = () => {
 
   const handleActionOnSelect = async (key: string, user: User) => {
     if (key === ActionKey.VIEW) {
-      getUserDetail(user.id);
+      try {
+        const userDetail = await getUserDetail(user.id);
+        setSelectedUser(userDetail); 
+        setIsModalOpen(true); 
+      } catch (error) {
+        message.error("Failed to fetch user details!");
+        console.error("Error fetching user detail:", error);
+      }
     } else if (key === ActionKey.DELETE) {
       Modal.confirm({
         title: "Are you sure you want to delete this user?",
@@ -110,9 +117,9 @@ const Users = () => {
         cancelText: "No",
         onOk: async () => {
           try {
-            await deleteUser(user.id); 
+            await deleteUser(user.id);
             message.success("User deleted successfully!");
-            refreshUserList(); 
+            refreshUserList();
           } catch (error) {
             message.error("Failed to delete user!");
           }
@@ -129,7 +136,7 @@ const Users = () => {
 
   const refreshUserList = async () => {
     try {
-      const data = await getUsers(); 
+      const data = await getUsers();
       setUsers(data);
     } catch (error) {
       console.error("Error refreshing user list:", error);
@@ -149,12 +156,15 @@ const Users = () => {
   const handleOk = async (updatedUser: User) => {
     try {
       await updateUser(updatedUser.id, updatedUser);
-      setIsModalOpen(false);
-      fetchUsers();
+      message.success("User updated successfully!");
+      setIsModalOpen(false); 
+      refreshUserList(); 
     } catch (error) {
+      message.error("Failed to update user!");
       console.error("Error updating user:", error);
     }
   };
+  
 
   const handleCancel = () => {
     setIsModalOpen(false);
