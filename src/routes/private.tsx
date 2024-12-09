@@ -11,6 +11,8 @@ import Settings from '../pages/Settings';
 import Chart from '../pages/Chart';
 import Alerts from '../pages/UiElements/Alerts';
 import Buttons from '../pages/UiElements/Buttons';
+import Categories from '../pages/Category/category';
+import Brand from '../pages/Brand/brand';
 
 const PrivateLayout = lazy(
   () => import('../components/layouts/PrivateLayout/PrivateLayout'),
@@ -42,6 +44,14 @@ const routes = [
       {
         path: '/profile',
         element: <Profile />,
+      },
+      {
+        path: '/category',
+        element: <Categories />,
+      },
+      {
+        path: '/brand',
+        element: <Brand />,
       },
       {
         path: '/forms/form-elements',

@@ -1,4 +1,5 @@
 import axios from "axios";
+import instanceAxios from "../config/axios";
 
 export const getCategories = async () => {
   try {

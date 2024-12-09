@@ -1,4 +1,5 @@
 export interface ProductType {
+  description: string;
   id: string;
   name: string;
   category: CategoryType;
@@ -28,6 +29,7 @@ export interface ProductFormValues {
 }
 
 export interface CategoryType {
+  description: any;
   id: string;
   name: string;
 }

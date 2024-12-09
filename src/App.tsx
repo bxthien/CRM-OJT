@@ -16,6 +16,8 @@ import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import Products from './pages/Products/products';
 import Dashboard from './pages/Dashboard/dashboard';
+import Categories from './pages/Category/category';
+import Brand from './pages/Brand/brand';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,6 +37,8 @@ function App() {
     <DefaultLayout>
       <Routes>
         <Route index path="/" element={<Dashboard />} />
+        <Route path="/brand" element={<Brand />} />
+        <Route path="/category" element={<Categories />} />
         <Route path="/products" element={<Products />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />

@@ -1,27 +1,19 @@
-import { Button, Card, Image, Input, Space, Table } from 'antd';
+import { Button, Card, Input, Space, Modal } from 'antd';
 import type { TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { getProduct, getProductDetail } from '../../api/product';
-// import EditIC from '../../assets/svgs/write.svg';
 import { ProductType } from '../../interface/product';
-// import DrawerProductDetail from "../../components/Modal/ModalProductDetail";
-import {
-  ActionType,
-  ProTable,
-  ProColumns,
-  RequestData,
-  TableDropdown,
-  ProDescriptions,
-} from '@ant-design/pro-components';
+import {ProTable,ProColumns,TableDropdown} from '@ant-design/pro-components';
 import './products.css';
 import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { CiCircleMore } from 'react-icons/ci';
+import { getProduct, getProductDetail } from '../../api/product';
+import DrawerProductDetail from './ModalProductDetail';
+import { deleteProduct } from '../../constants/product';
 
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [productDetail, setProductDetail] = useState<ProductType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleActionClick = async (id: string) => {
     try {
       const productDetail = await getProductDetail(id);
@@ -31,12 +23,54 @@ const Products = () => {
       console.error('Error fetching product details:', error);
     }
   };
-
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
+      console.log(`Product with ID ${id} deleted successfully.`);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+  const confirmDelete = (id: string) => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this product?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => handleDeleteProduct(id),
+    });
+  };
   enum ActionKey {
     DELETE = 'delete',
     VIEW = 'view',
   }
-
+  const handleActionOnSelect = async (key: string, product: ProductType) => {
+    if (key === ActionKey.VIEW) {
+      await handleActionClick(product.id);
+    } else if (key === ActionKey.DELETE) {
+      confirmDelete(product.id);
+    }
+  };
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await getProduct();
+        setProducts(data);
+      } catch (err) {
+        console.log('Error fetching products:', err);
+      }
+    };
+    fetchProducts();
+  }, []);
   const columns: ProColumns[] = [
     {
       title: 'ID',
@@ -104,45 +138,14 @@ const Products = () => {
       ),
     },
   ];
-
-  const handleActionOnSelect = (key: string, product: ProductType) => {
-    if (key === ActionKey.DELETE) {
-    }
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await getProduct();
-        setProducts(data);
-      } catch (err) {
-        console.log('err', err);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
   return (
     <div className="flex flex-col gap-4">
-      {/* <DrawerProductDetail
+      <DrawerProductDetail
         product={productDetail}
         isDrawerOpen={isModalOpen}
-        handleO={handleOk}
+        handleOk={handleOk}
         handleCancel={handleCancel}
-      /> */}
+      />
       <Card
         bordered={false}
         className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white"
@@ -151,15 +154,15 @@ const Products = () => {
         <div className="table-responsive dark:bg-boxdark">
           <div className="flex gap-3 mx-6">
             <Input
-              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
+              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8C8C8C]"
               placeholder="Search by product name"
             />
             <Input
-              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
+              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8C8C8C]"
               placeholder="Search by product name"
             />
             <Input
-              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
+              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8C8C8C]"
               placeholder="Search by product name"
             />
             <Button className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 border-none ">
@@ -181,5 +184,4 @@ const Products = () => {
     </div>
   );
 };
-
 export default Products;
