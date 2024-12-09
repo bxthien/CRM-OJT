@@ -101,7 +101,7 @@ const Users = () => {
   const handleActionOnSelect = async (key: string, user: User) => {
     if (key === ActionKey.VIEW) {
       try {
-        const userDetail = await getUserDetail(user.id);
+        const userDetail = await getUserDetail(user.id); 
         setSelectedUser(userDetail); 
         setIsModalOpen(true); 
       } catch (error) {
@@ -126,7 +126,7 @@ const Users = () => {
         },
       });
     }
-  };
+  };  
 
   const handleActive = async (id: string) => {
     const result = await changeActive(id)
@@ -155,21 +155,21 @@ const Users = () => {
 
   const handleOk = async (updatedUser: User) => {
     try {
-      await updateUser(updatedUser.id, updatedUser);
+      await updateUser(updatedUser.id, updatedUser); 
       message.success("User updated successfully!");
       setIsModalOpen(false); 
-      refreshUserList(); 
+      refreshUserList();
     } catch (error) {
       message.error("Failed to update user!");
       console.error("Error updating user:", error);
     }
   };
+
   
-
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen(false); 
   };
-
+  
   useEffect(() => {
     fetchUsers();
   }, []);

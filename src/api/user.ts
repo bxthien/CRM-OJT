@@ -44,7 +44,14 @@ export const deleteUser = async (id: string) => {
 
 export const updateUser = async (id: string, userData: Partial<User>) => {
   try {
-    const response = await instanceAxios.put(`/user/update/${id}`, userData);
+    const response = await instanceAxios.patch(`/user/${id}`, {
+      username: userData.username,
+      fullName: userData.fullName,
+      email: userData.email,
+      address: userData.address,
+      phone: userData.phoneNumber, 
+      description: userData.description,
+    });
     return response.data;
   } catch (error) {
     console.error("Error updating user:", error);

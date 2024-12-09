@@ -37,7 +37,7 @@ const DropdownDefault = () => {
       <button
         className="text-[#98A6AD] hover:text-body"
         ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={() => setDropdownOpen(!dropdownOpen)}  
       >
         <svg
           className="fill-current"
@@ -126,3 +126,4 @@ const DropdownDefault = () => {
 };
 
 export default DropdownDefault;
+  

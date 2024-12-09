@@ -5,8 +5,6 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/auth';
 import { SignInResponse, User } from '../interface/auth';
 import { login, logout } from '../redux/features/auth/authSlice';
 import { setUser } from '../redux/features/auth/userSlice';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
 
 export interface SignInPayload {
   email: string;
