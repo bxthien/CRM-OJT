@@ -1,11 +1,14 @@
 export interface ProductType {
+  urls: string[];
   url: string;
   id: string;
   name: string;
-  category: CategoryType;
+  category: { id: string; name: string };
+  categoryId?: string;
   price: number;
   quantity: number;
   info?: Info;
+  photos?: string[];
 }
 
 export interface Info {
