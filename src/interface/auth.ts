@@ -8,6 +8,7 @@ export interface User {
   url: string;
   description: string;
   avatar: string;
+  isActive: boolean
 }
 
 export interface UserProfile {
@@ -16,11 +17,13 @@ export interface UserProfile {
 }
 
 export interface SignInResponse {
+  roles: string;
   access_token: string;
   refresh_token: string;
   user: {
     id: string;
     email: string;
+    roles: string;
   };
 }
 
