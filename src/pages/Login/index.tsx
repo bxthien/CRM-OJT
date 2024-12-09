@@ -14,19 +14,19 @@ const Login = () => {
   const handleSubmit = async (values: SignInPayload) => {
     setLoading(true);
     try {
-      const response = await signIn(values);
+      const response = await signIn(values); 
       if (response) {
-        message.success('Login successful!');
-        navigate('/');
-        fetchUser();
+          message.success('Login successful!');
+          navigate('/'); 
+          fetchUser(); 
       }
     } catch (err) {
-      console.error(err);
       message.error('Login failed.');
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex items-center justify-center h-screen rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">

@@ -3,8 +3,6 @@ import { getStorageData } from '../storage';
 import { API_URL } from '../../constants/url';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants/auth';
 
-// const BASE_URL = 'https://be-final-project-bddr.onrender.com';
-// axios.defaults.baseURL = BASE_URL;
 
 const instanceAxios = axios.create({
   baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
