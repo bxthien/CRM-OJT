@@ -5,13 +5,13 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants/auth';
 
 
 const instanceAxios = axios.create({
-  baseURL: 'https://37b3-113-160-225-96.ngrok-free.app',
+  baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'Access-Control-Allow-Origin': '*',
     'ngrok-skip-browser-warning': 'true',
   },
-  timeout: 1000,
+  // timeout: 1000,
 });
 
 instanceAxios.interceptors.request.use(

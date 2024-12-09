@@ -25,6 +25,7 @@ module.exports = {
           DEFAULT: '#1C2434',
           2: '#010101',
         },
+        'strokedark': '#333', 
         red: {
           ...colors.red,
           DEFAULT: '#FB5454',
