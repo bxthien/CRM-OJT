@@ -20,6 +20,7 @@ const Login = () => {
           navigate('/'); 
           fetchUser(); 
       }
+      localStorage.setItem('userRole', response.roles); 
     } catch (err) {
       message.error('Login failed.');
     } finally {
