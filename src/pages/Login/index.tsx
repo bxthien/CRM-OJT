@@ -14,13 +14,13 @@ const Login = () => {
   const handleSubmit = async (values: SignInPayload) => {
     setLoading(true);
     try {
-      const response = await signIn(values); 
+      const response = await signIn(values);
       if (response) {
-          message.success('Login successful!');
-          navigate('/'); 
-          fetchUser(); 
+        message.success('Login successful!');
+        navigate('/');
+        fetchUser();
       }
-      localStorage.setItem('userRole', response.roles); 
+      localStorage.setItem('userRole', response.roles);
     } catch (err) {
       message.error('Login failed.');
     } finally {

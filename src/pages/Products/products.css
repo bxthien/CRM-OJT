@@ -1,31 +1,14 @@
-.ant-card .ant-card-head {
-  border: none;
-}
-
-.dark .ant-table-thead tr > th {
-  @apply dark:bg-strokedark;
-  color: #8c8c8c;
-}
-
 .dark .ant-table-tbody tr > td {
   color: white !important;
+  background-color: #24303f !important;
 }
 
 .ant-table-tbody tr > td {
-  @apply dark:bg-boxdark;
-}
-
-.ant-table-tbody .ant-table-row > .ant-table-cell-row-hover {
-  @apply dark:bg-strokedark;
+  background-color: white !important;
 }
 
 .dark .ant-table-tbody > tr > td {
-  border-bottom: 1px solid #2e3a47; /* Dark mode */
-}
-
-.ant-spin-container,
-.ant-pro-card {
-  @apply dark:bg-boxdark;
+  border-bottom: 1px solid #2e3a47;
 }
 
 .dark .ant-table-thead > tr > th {
@@ -36,11 +19,68 @@
   color: white;
 }
 
-.ant-card .ant-card-head,
-.ant-table-thead tr > th,
-.ant-table-tbody tr > td,
-.ant-spin-container,
-.ant-pro-card,
-.tablespace .ant-card-head-title {
-  @apply transition-colors duration-300; /* Smooth transition */
+.ant-pro-card-body {
+  background-color: white;
+}
+
+.ant-table-wrapper .ant-table-pagination.ant-pagination {
+  background-color: white;
+  margin: 0px;
+  padding: 16px 0px;
+}
+
+.dark .ant-table-wrapper .ant-table-pagination.ant-pagination {
+  background-color: #24303f;
+  margin: 0px;
+  padding: 16px 0px;
+}
+
+.dark .ant-pro-card-body {
+  background-color: #24303f;
+}
+
+.dark .ant-pagination-total-text {
+  color: white;
+}
+
+.dark .ant-pagination-next .anticon {
+  color: white;
+}
+
+.dark .ant-pagination-prev .anticon {
+  color: white;
+}
+
+.dark .ant-pagination-item {
+  background-color: #24303f !important;
+  border-color: white !important;
+}
+
+.dark .ant-pagination-item > a {
+  color: white !important;
+}
+.dark .ant-pagination-options {
+  color: white !important;
+}
+
+.dark .ant-pro-table-list-toolbar-setting-item {
+  color: white !important;
+}
+
+.ant-table-wrapper
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  > *:last-child {
+  border-start-end-radius: 0px;
+}
+
+.ant-table-wrapper
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  > *:first-child {
+  border-start-start-radius: 0px;
 }
