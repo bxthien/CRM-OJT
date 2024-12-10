@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
@@ -17,10 +18,13 @@ import DefaultLayout from './layout/DefaultLayout';
 import Products from './pages/Products/products';
 import Dashboard from './pages/Dashboard/dashboard';
 import Users from './pages/User/user';
+import Categories from './pages/Categories/categories';
+import Orders from './pages/Order/Order';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
+  const userRole = localStorage.getItem("userRole");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,6 +41,7 @@ function App() {
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/forms/form-elements" element={<FormElements />} />
@@ -44,7 +49,13 @@ function App() {
         <Route path="/tables" element={<Tables />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/chart" element={<Chart />} />
-        <Route path="/users" element={<Users />} />
+        <Route 
+        path="/users" 
+        element={userRole === "seller" 
+          ? <Navigate to="/" replace /> 
+          : <Users />} 
+      />        
+        <Route path="/orders" element={<Orders />} />
         <Route path="/ui/alerts" element={<Alerts />} />
         <Route path="/ui/buttons" element={<Buttons />} />
         <Route path="/auth/signin" element={<SignIn />} />

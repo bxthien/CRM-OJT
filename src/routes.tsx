@@ -3,6 +3,7 @@ import privateRoutes from './routes/private';
 import publicRoutes from './routes/public';
 import NotFound from './components/not-found';
 
+
 const router = createBrowserRouter([
   {
     path: '/',
