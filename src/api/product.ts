@@ -25,7 +25,7 @@ export const getProductDetail = async (param: string) => {
 
 export const addProduct = async (product: ProductType) => {
   try {
-    const response = await instanceAxios.post("/product", product);
+    const response = await instanceAxios.post("/product/create", product);
     return response.data;
   } catch (error) {
     console.error("Error adding product:", error);
@@ -55,11 +55,9 @@ export const updateProduct = async (id: string, product: ProductType) => {
 }
 
 
-export const uploadImage = async (files: File) => {
+export const uploadImage = async (formData: FormData)  => {
   try {
-    const formData = new FormData();
-    formData.append("files", files);
-
+    // Directly use the formData passed in, without redefining it
     const response = await instanceAxios.post("/upload/mutipleImage", formData, {
       headers: {
         "Content-Type": "multipart/form-data", 
@@ -69,7 +67,6 @@ export const uploadImage = async (files: File) => {
     return response.data; 
   } catch (error) {
     console.error("Error uploading image:", error);
-    
     throw error;
   }
 };

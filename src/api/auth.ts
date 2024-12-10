@@ -22,10 +22,10 @@ export const useSignIn = () => {
       );
 
       // Kiểm tra vai trò của user
-      const allowedRoles = ['admin', 'seller']; // Các vai trò được phép
-      if (!allowedRoles.includes(response.roles)) {
-        throw new Error('User role is not authorized to access.');
-      }
+      // const allowedRoles = ['admin', 'seller']; // Các vai trò được phép
+      // if (!allowedRoles.includes(response.roles)) {
+      //   throw new Error('User role is not authorized to access.');
+      // }
 
       if (response.access_token) {
         // Lưu token vào localStorage
@@ -46,7 +46,6 @@ export const useSignIn = () => {
 
   return { signIn };
 };
-
 
 export const useLogout = () => {
   const dispatch = useDispatch();
