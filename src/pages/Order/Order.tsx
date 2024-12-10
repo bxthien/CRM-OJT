@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Card, Input, Space, Switch, message, Modal } from "antd";
+import React, { useEffect, useState } from "react";
+import { Card, Input, Space, message, Modal } from "antd";
 import {
   ProTable,
   ProColumns,
@@ -9,7 +9,6 @@ import Icon, { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import {
   getOrders,
   getOrderDetail,
-  updateOrder,
   deleteOrder,
 } from "../../api/order";
 import { Order } from "../../interface/order";
@@ -32,22 +31,52 @@ const Orders = () => {
   const columns: ProColumns<Order>[] = [
     {
       title: "Order ID",
-      dataIndex: "id",
-      key: "id",
-      width: 150,
+      dataIndex: "orderId",
+      key: "orderId",
+      width: 50,
     },
     {
-      title: "Customer",
-      dataIndex: "customerName",
-      key: "customerName",
-      width: 200,
+      title: "Username",
+      dataIndex: "user",
+      key: "username",
+      render: (_, entity: Order) => entity.user.username,
     },
     {
-      title: "Total Price",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
-      width: 150,
-      render: (price) => ``,
+      title: "Phone",
+      dataIndex: "user",
+      key: "phone",
+      render: (_, entity: Order) => entity.user.phone,
+    },
+    {
+      title: "Method",
+      dataIndex: "methodShipping",
+      key: "methodShipping",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      render: (_, entity: Order) =>
+        `${entity.address.province}, ${entity.address.district}, ${entity.address.detailedAddress}`,
+    },
+    {
+      title: "Product Name",
+      dataIndex: "transactions",
+      key: "productName",
+      render: (_, entity: Order) =>
+        entity.transactions.map((t: { product: { name: any; }; }) => t.product.name).join(", "),
+    },
+    {
+      title: "Quantity",
+      dataIndex: "transactions",
+      key: "quantity",
+      render: (_, entity: Order) =>
+        entity.transactions.reduce((sum: any, t: { quantity: any; }) => sum + t.quantity, 0),
     },
     {
       title: "Action",
@@ -88,22 +117,23 @@ const Orders = () => {
   const handleActionOnSelect = async (key: string, order: Order) => {
     if (key === ActionKey.VIEW) {
       try {
-        const orderDetail = await getOrderDetail(order.id);
+        const orderDetail = await getOrderDetail(order.orderId);
         setSelectedOrder(orderDetail);
         setIsModalOpen(true);
       } catch (error) {
         message.error("Failed to fetch order details!");
+        console.error("Error fetching order detail:", error);
       }
     } else if (key === ActionKey.DELETE) {
       Modal.confirm({
         title: "Are you sure you want to delete this order?",
-        content: `Order ID: ${order.id}`,
+        content: `Order ID: ${order.orderId}`,
         okText: "Yes, Delete",
         okType: "danger",
         cancelText: "No",
         onOk: async () => {
           try {
-            await deleteOrder(order.id);
+            await deleteOrder(order.orderId);
             message.success("Order deleted successfully!");
             refreshOrderList();
           } catch (error) {
@@ -113,6 +143,7 @@ const Orders = () => {
       });
     }
   };
+
   const refreshOrderList = async () => {
     try {
       const data = await getOrders();
@@ -131,17 +162,6 @@ const Orders = () => {
     }
   };
 
-  const handleOk = async (updatedOrder: Order) => {
-    try {
-      await updateOrder(updatedOrder.id, updatedOrder);
-      message.success("Order updated successfully!");
-      setIsModalOpen(false);
-      refreshOrderList();
-    } catch (error) {
-      message.error("Failed to update order!");
-    }
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -155,11 +175,13 @@ const Orders = () => {
       <DrawerOrderDetail
         order={selectedOrder}
         isDrawerOpen={isModalOpen}
-        handleOk={handleOk}
         handleCancel={handleCancel}
       />
       <Breadcrumb pageName="Orders" />
-      <Card bordered={false} className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6">
+      <Card
+        bordered={false}
+        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6"
+      >
         <div className="table-responsive">
           <div className="flex gap-3 mx-6 mb-4">
             <Input placeholder="Search by customer name" />

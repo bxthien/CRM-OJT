@@ -1,40 +1,36 @@
 import instanceAxios from "../config/axios";
+import { Order } from "../interface/order";
 
-export const getOrders = async () => {
+export const getOrders = async (): Promise<Order[]> => {
   try {
-    const response = await instanceAxios.post("/order/orders", {
-      params: { orderBy: "ASC", page: 1, take: 10 },
-    });
-    return response.data;
+    const response = await instanceAxios.get("/orders/all");
+    return response.data.map((order: any) => ({
+      ...order,
+      user: order.user || null,
+    }));
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw error;
   }
 };
 
-export const getOrderDetail = async (id: string) => {
+export const getOrderDetail = async (orderId: string): Promise<Order> => {
   try {
-    const response = await instanceAxios.get(`/order/${id}`);
-    return response.data;
+    const response = await instanceAxios.get(`/orders/${orderId}`);
+    const order = response.data;
+    return {
+      ...order,
+      user: order.user || null, 
+    };
   } catch (error) {
     console.error("Error fetching order detail:", error);
     throw error;
   }
 };
 
-export const updateOrder = async (id: string, data: any) => {
+export const deleteOrder = async (orderId: string): Promise<void> => {
   try {
-    const response = await instanceAxios.put(`/order/${id}`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Error updating order:", error);
-    throw error;
-  }
-};
-
-export const deleteOrder = async (id: string) => {
-  try {
-    const response = await instanceAxios.delete(`/order/${id}`);
+    const response = await instanceAxios.delete(`/orders/${orderId}`);
     return response.data;
   } catch (error) {
     console.error("Error deleting order:", error);
