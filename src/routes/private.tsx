@@ -12,6 +12,7 @@ import Chart from '../pages/Chart';
 import Alerts from '../pages/UiElements/Alerts';
 import Buttons from '../pages/UiElements/Buttons';
 import Users from '../pages/User/user';
+import Categories from '../pages/Categories/categories';
 import Orders from '../pages/Order/Order';
 
 const PrivateLayout = lazy(
@@ -36,6 +37,10 @@ const routes = [
       {
         path: '/products',
         element: <Products />,
+      },
+      {
+        path: '/categories',
+        element: <Categories />,
       },
       {
         path: '/calendar',

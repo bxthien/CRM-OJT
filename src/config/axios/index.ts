@@ -11,7 +11,7 @@ const instanceAxios = axios.create({
     'Access-Control-Allow-Origin': '*',
     'ngrok-skip-browser-warning': 'true',
   },
-  timeout: 1000,
+  // timeout: 1000,
 });
 
 instanceAxios.interceptors.request.use(
