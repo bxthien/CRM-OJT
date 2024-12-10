@@ -98,6 +98,8 @@ const Categories = () => {
       >
         <Form form={form} onFinish={handleAddCategory} layout="vertical">
           <Form.Item
+           className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
+             
             label="Category Name"
             name="name"
             rules={[{ required: true, message: "Please enter the category name!" }]}
@@ -108,7 +110,7 @@ const Categories = () => {
       </Modal>
 
       {/* Bảng danh mục */}
-      <Table columns={columns} dataSource={categories} rowKey="id" />
+      <Table columns={columns} dataSource={categories} rowKey="id"   className="ant-table white-table"/>
     </div>
   );
 };
