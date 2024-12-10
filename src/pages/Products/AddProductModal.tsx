@@ -149,7 +149,7 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
               allowClear
               className="w-full"
               onChange={(value) =>
-                handleInputChange('info', [{ colors: value }])
+                handleInputChange('info', [{ color: value }])
               }
             >
               <Select.Option value="Red">Red</Select.Option>
@@ -157,6 +157,14 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
               <Select.Option value="Green">Green</Select.Option>
               <Select.Option value="Yellow">Yellow</Select.Option>
               <Select.Option value="Black">Black</Select.Option>
+              <Select.Option value="White">White</Select.Option>
+              <Select.Option value="Gray">Gray</Select.Option>
+              <Select.Option value="Brown">Brown</Select.Option>
+              <Select.Option value="Pink">Pink</Select.Option>
+              <Select.Option value="Purple">Purple</Select.Option>
+              <Select.Option value="Orange">Orange</Select.Option>
+              <Select.Option value="Gold">Gold</Select.Option>
+              <Select.Option value="Silver">Silver</Select.Option>
             </Select>
           </Form.Item>
 
@@ -167,7 +175,7 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
               allowClear
               className="w-full"
               onChange={(value) =>
-                handleInputChange('info', [{ sizes: value }])
+                handleInputChange('info', [{ size: value }])
               }
             >
               <Select.Option value="64GB">64GB</Select.Option>
@@ -182,24 +190,24 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
         {/* Fourth row - responsive grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <Form.Item label="Upload Image" className="w-full">
-          <Upload
-            beforeUpload={() => false}
-            onChange={(info) => {
-              if (info.file.originFileObj) {
-                const file = info.file.originFileObj;
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setNewProduct((prev) => ({
-                    ...prev,
-                    url: reader.result as string,
-                  }));
-                };
-                reader.readAsDataURL(file);
-              }
-            }}
-          >
-            <Button icon={<UploadOutlined />}>Upload Image</Button>
-          </Upload>
+            <Upload
+              beforeUpload={() => false}
+              onChange={(info) => {
+                if (info.file.originFileObj) {
+                  const file = info.file.originFileObj;
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setNewProduct((prev) => ({
+                      ...prev,
+                      url: reader.result as string,
+                    }));
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Upload Image</Button>
+            </Upload>
             {newProduct.urls?.length > 0 && (
               <img
                 src={newProduct.urls[0]}
@@ -226,7 +234,12 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="w-full">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full"
+            onClick={handleSubmit}
+          >
             Add Product
           </Button>
         </Form.Item>
