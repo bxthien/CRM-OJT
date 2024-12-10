@@ -17,6 +17,7 @@ import DefaultLayout from './layout/DefaultLayout';
 import Products from './pages/Products/products';
 import Dashboard from './pages/Dashboard/dashboard';
 import Users from './pages/User/user';
+import Categories from './pages/Categories/categories';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,6 +38,7 @@ function App() {
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/forms/form-elements" element={<FormElements />} />
