@@ -11,26 +11,35 @@ import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { CiCircleMore } from 'react-icons/ci';
 import DrawerProductDetail from './ModalProductDetail';
 import { Modal } from 'antd';
-import { addProduct, deleteProduct, getProduct, getProductDetail, updateProduct, uploadImage } from '../../api/product';
+import {
+  addProduct,
+  deleteProduct,
+  getProduct,
+  getProductDetail,
+  updateProduct,
+  uploadImage,
+} from '../../api/product';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StyledButton from '../../components/Common/Button';
 import AddProductDrawer from './AddProductModal';
 
 const Products = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [productDetail, setProductDetail] = useState<ProductType | undefined>(undefined);
+  const [productDetail, setProductDetail] = useState<ProductType | undefined>(
+    undefined,
+  );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [newProduct, setNewProduct] = useState<ProductType>({
-    id: "",
-    name: "",
-    urls:[],
+    id: '',
+    name: '',
+    urls: [],
     price: 0,
-    url: "",
+    url: '',
     quantity: 0,
     photos: [],
-    category: { id: "", name: "" },
-    categoryId: "", 
+    category: { id: '', name: '' },
+    categoryId: '',
   });
 
   // Handle adding a product
@@ -38,38 +47,41 @@ const Products = () => {
     try {
       const addedProduct = await addProduct(newProduct);
       setProducts((prev) => [...prev, addedProduct]);
-      message.success("Product added successfully!");
+      message.success('Product added successfully!');
       setIsAddModalOpen(false);
       setNewProduct({
-        id: "",
-        urls:[],
-        name: "",
+        id: '',
+        urls: [],
+        name: '',
         price: 0,
-        url: "",
+        url: '',
         quantity: 0,
         photos: [],
-        category: { id: "", name: "" },
-        categoryId: "",
+        category: { id: '', name: '' },
+        categoryId: '',
       });
     } catch (error) {
-      message.error("Failed to add product. Please try again.");
-      console.error("Error adding product:", error);
+      message.error('Failed to add product. Please try again.');
+      console.error('Error adding product:', error);
     }
   };
 
   // Handle updating a product
   const handleUpdateProduct = async (updatedProduct: ProductType) => {
     try {
-      const updatedData = await updateProduct(updatedProduct.id, updatedProduct);
-      message.success("Product updated successfully!");
+      const updatedData = await updateProduct(
+        updatedProduct.id,
+        updatedProduct,
+      );
+      message.success('Product updated successfully!');
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
-          product.id === updatedProduct.id ? updatedData : product
-        )
+          product.id === updatedProduct.id ? updatedData : product,
+        ),
       );
     } catch (error) {
-      message.error("Failed to update product. Please try again.");
-      console.error("Error updating product:", error);
+      message.error('Failed to update product. Please try again.');
+      console.error('Error updating product:', error);
     }
   };
 
@@ -88,7 +100,9 @@ const Products = () => {
   const handleDeleteProduct = async (id: string) => {
     try {
       await deleteProduct(id);
-      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== id),
+      );
       console.log(`Product with ID ${id} deleted successfully.`);
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -155,7 +169,7 @@ const Products = () => {
           url: uploadedImage.url, // Set the image URL after successful upload
         }));
       } catch (error) {
-        console.error("Error uploading image:", error);
+        console.error('Error uploading image:', error);
       }
     };
     if (file) {
@@ -262,7 +276,7 @@ const Products = () => {
       <Breadcrumb pageName="Products" />
       <Card
         bordered={false}
-        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6"
+        className="circlebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6 bg-white "
       >
         <div className="table-responsive dark:bg-boxdark">
           <div className="flex gap-3 mx-6">
