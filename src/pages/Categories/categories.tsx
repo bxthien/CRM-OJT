@@ -1,20 +1,20 @@
 import {
   Space,
-  Table,
   message,
   Button,
-  Modal,
+  Drawer,
   Form,
   Input,
   Popconfirm,
+  Card,
 } from 'antd';
-import type { TableProps } from 'antd';
 import {
   getCategories,
   addCategory,
   deleteCategory,
 } from '../../api/categories'; // Giả định bạn có API addCategory
 import { useEffect, useState } from 'react';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 export interface CategoryType {
   id: string;
   name: string;
@@ -22,7 +22,7 @@ export interface CategoryType {
 
 const Categories = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [form] = Form.useForm();
 
   const fetchCategories = async () => {
@@ -53,7 +53,7 @@ const Categories = () => {
       setCategories((prev) => [...prev, newCategory]); // Cập nhật danh sách
       message.success('Category added successfully!');
       form.resetFields(); // Reset form
-      setIsModalOpen(false); // Đóng modal
+      setIsDrawerOpen(false); // Đóng modal
     } catch (err) {
       console.error('Error adding category:', err);
       message.error('Failed to add category!');
@@ -65,7 +65,7 @@ const Categories = () => {
   }, []);
 
   // Cột của bảng, thêm sự kiện xóa với xác nhận
-  const columns: TableProps<CategoryType>['columns'] = [
+  const columns: ProColumns[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -95,22 +95,26 @@ const Categories = () => {
   ];
 
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+    <Card
+      bordered={false}
+      className="circlebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6 bg-white "
+    >
+      <div className="flex justify-end mb-4 mx-6">
         <Button
           type="primary"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsDrawerOpen(true)}
+          className="ml-auto"
         >
           Add Category
         </Button>
       </div>
 
       {/* Modal để thêm danh mục */}
-      <Modal
+      <Drawer
         title="Add New Category"
-        visible={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={() => form.submit()} // Submit form khi nhấn "OK"
+        placement="right"
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
       >
         <Form form={form} onFinish={handleAddCategory} layout="vertical">
           <Form.Item
@@ -122,11 +126,25 @@ const Categories = () => {
           >
             <Input />
           </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="w-full">
+              Add Category
+            </Button>
+          </Form.Item>
         </Form>
-      </Modal>
+      </Drawer>
 
-      <Table columns={columns} dataSource={categories} rowKey="id" />
-    </div>
+      <ProTable
+        columns={columns}
+        dataSource={categories}
+        className="ant-border-space"
+        search={false}
+        pagination={{
+          showQuickJumper: true,
+          pageSize: 10,
+        }}
+      />
+    </Card>
 
   );
 };

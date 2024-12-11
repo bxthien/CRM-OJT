@@ -20,6 +20,7 @@ import Dashboard from './pages/Dashboard/dashboard';
 import Users from './pages/User/user';
 import Categories from './pages/Categories/categories';
 import Orders from './pages/Order/Order';
+import Brands from './pages/Brands/brands';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);

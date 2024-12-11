@@ -1,4 +1,4 @@
-import { Button, Card, Input, message, Space, Upload } from 'antd';
+import { Button, Card, Input, message, Space, Upload, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import { ProductType } from '../../interface/product';
 import {
@@ -10,7 +10,6 @@ import './products.css';
 import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { CiCircleMore } from 'react-icons/ci';
 import DrawerProductDetail from './ModalProductDetail';
-import { Modal } from 'antd';
 import {
   addProduct,
   deleteProduct,
@@ -29,40 +28,27 @@ const Products = () => {
     undefined,
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
+const [searchQuery, setSearchQuery] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [newProduct, setNewProduct] = useState<ProductType>({
     id: '',
     name: '',
-    urls: [],
     price: 0,
-    url: '',
+    urls: [],
     quantity: 0,
-    photos: [],
-    category: { id: '', name: '' },
     categoryId: '',
+    url: '',
+    category: { id: '', name: '' },
   });
 
   // Handle adding a product
-  const handleAddProduct = async () => {
+  const handleAddProduct = async (newProduct: ProductType) => {
     try {
       const addedProduct = await addProduct(newProduct);
-      setProducts((prev) => [...prev, addedProduct]);
-      message.success('Product added successfully!');
-      setIsAddModalOpen(false);
-      setNewProduct({
-        id: '',
-        urls: [],
-        name: '',
-        price: 0,
-        url: '',
-        quantity: 0,
-        photos: [],
-        category: { id: '', name: '' },
-        categoryId: '',
-      });
+      setProducts([...products, addedProduct]);
     } catch (error) {
-      message.error('Failed to add product. Please try again.');
-      console.error('Error adding product:', error);
+      console.error('Failed to add product:', error);
     }
   };
 
@@ -144,38 +130,54 @@ const Products = () => {
     setIsModalOpen(false);
   };
 
-  // Fetch products on component mount
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+  
+    if (query) {
+      const filteredProducts = originalProducts.filter((product) =>
+        product.name.toLowerCase().includes(query)
+      );
+      setProducts(filteredProducts);
+    } else {
+      setProducts(originalProducts);
+    }
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const { data } = await getProduct();
         setProducts(data);
+        setOriginalProducts(data);
       } catch (err) {
         console.log('Error fetching products:', err);
       }
     };
-
+  
     fetchProducts();
   }, []);
+  
 
   // Handle image upload
-  const handleImageUpload = (file: any) => {
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      try {
-        const uploadedImage = await uploadImage(file.originFileObj);
-        setNewProduct((prevProduct) => ({
-          ...prevProduct,
-          url: uploadedImage.url, // Set the image URL after successful upload
+  const handleImageUpload = async (file: any) => {
+    const formData = new FormData();
+    formData.append('file', file.originFileObj);
+
+    try {
+      const response = await uploadImage(formData); // Assuming `uploadImage` handles the API call
+      if (response && response.url) {
+        setNewProduct((prev) => ({
+          ...prev,
+          urls: [...(prev.urls || []), response.url], // Append the URL if successful
         }));
-      } catch (error) {
-        console.error('Error uploading image:', error);
+      } else {
+        console.error('Failed to upload image');
       }
-    };
-    if (file) {
-      reader.readAsDataURL(file.originFileObj);
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
-    return false;
+    return false; // Prevent default upload behavior
   };
 
   // Define table columns
@@ -212,9 +214,9 @@ const Products = () => {
     },
     {
       title: 'Category',
-      dataIndex: 'Category',
+      dataIndex: 'category',
       key: 'category',
-      render: (_, row: ProductType) => <>{row.category.name}</>,
+      render: (_, row: ProductType) => <>{row.categoryId}</>, // You can change this if needed to show category name
       width: 200,
     },
     {
@@ -276,15 +278,17 @@ const Products = () => {
       <Breadcrumb pageName="Products" />
       <Card
         bordered={false}
-        className="circlebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6 bg-white "
+        className="criclebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6"
       >
         <div className="table-responsive dark:bg-boxdark">
           <div className="flex gap-3 mx-6">
             <Input
               className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
               placeholder="Search by product name"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
-            <StyledButton>Search</StyledButton>
+            {/* <StyledButton onClick={handleSearch}>Search</StyledButton> */}
             <Button type="primary" onClick={() => setIsAddModalOpen(true)}>
               Add Product
             </Button>
@@ -303,7 +307,7 @@ const Products = () => {
       </Card>
       <AddProductDrawer
         isDrawerOpen={isAddModalOpen}
-        handleAddProduct={handleAddProduct}
+        handleAddProduct={() => handleAddProduct(newProduct)}
         handleCancel={() => setIsAddModalOpen(false)}
         setNewProduct={setNewProduct}
         newProduct={newProduct}

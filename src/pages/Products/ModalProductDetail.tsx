@@ -24,7 +24,7 @@ const DrawerProductDetail = ({
   handleOk,
   handleCancel,
 }: Prop) => {
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -55,8 +55,8 @@ const DrawerProductDetail = ({
           uid: `-${index}`,
           name: `image-${index}`,
           status: 'done',
-          url: url
-        }))
+          url: url,
+        })),
       );
       form.setFieldsValue({
         name: product.name,
@@ -96,7 +96,7 @@ const DrawerProductDetail = ({
     newFileList = newFileList.slice(-5);
 
     // Process completed uploads
-    newFileList = newFileList.map(file => {
+    newFileList = newFileList.map((file) => {
       if (file.response) {
         // Assuming your API returns an object with a url property
         file.url = file.response.url;
@@ -108,20 +108,22 @@ const DrawerProductDetail = ({
 
     // Update photos with successfully uploaded image URLs
     const uploadedPhotos = newFileList
-      .filter(file => file.status === 'done')
-      .map(file => file.url || file.response?.url)
+      .filter((file) => file.status === 'done')
+      .map((file) => file.url || file.response?.url)
       .filter(Boolean);
 
-    setPhotos(prev => [
-      ...prev.filter(photo => !newFileList.some(file => file.url === photo)),
-      ...uploadedPhotos
+    setPhotos((prev) => [
+      ...prev.filter(
+        (photo) => !newFileList.some((file) => file.url === photo),
+      ),
+      ...uploadedPhotos,
     ]);
   };
 
   // Handle removing photos
   const handleRemovePhoto = (file: UploadFile) => {
-    const newPhotos = photos.filter(photo => 
-      photo !== file.url && photo !== file.response?.url
+    const newPhotos = photos.filter(
+      (photo) => photo !== file.url && photo !== file.response?.url,
     );
     setPhotos(newPhotos);
   };
@@ -144,7 +146,6 @@ const DrawerProductDetail = ({
     };
     handleOk(updatedProduct);
   };
-
 
   return (
     <Drawer
@@ -266,6 +267,14 @@ const DrawerProductDetail = ({
               <Select.Option value="Green">Green</Select.Option>
               <Select.Option value="Yellow">Yellow</Select.Option>
               <Select.Option value="Black">Black</Select.Option>
+              <Select.Option value="White">White</Select.Option>
+              <Select.Option value="Gray">Gray</Select.Option>
+              <Select.Option value="Brown">Brown</Select.Option>
+              <Select.Option value="Pink">Pink</Select.Option>
+              <Select.Option value="Purple">Purple</Select.Option>
+              <Select.Option value="Orange">Orange</Select.Option>
+              <Select.Option value="Gold">Gold</Select.Option>
+              <Select.Option value="Silver">Silver</Select.Option>
             </Select>
           </Form.Item>
 
@@ -327,7 +336,7 @@ const DrawerProductDetail = ({
           />
 
           {/* URL Input - Responsive Flex */}
-           <Upload
+          <Upload
             listType="picture-card"
             fileList={fileList}
             multiple={true}
@@ -369,8 +378,7 @@ const DrawerProductDetail = ({
                 No photos added yet.
               </div>
             )}
-          </div> 
-        
+          </div>
         </Form.Item>
       </Form>
     </Drawer>

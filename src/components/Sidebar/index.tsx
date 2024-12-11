@@ -177,7 +177,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </NavLink>
                 </li>
               )}
-
               {/* <!-- Menu Item Settings --> */}
               {userRole !== 'seller' && (
                 <li>
