@@ -36,7 +36,7 @@ const Users = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      width: 150,
+      width: 50,
     },
     {
       title: 'Username',
@@ -195,7 +195,9 @@ const Users = () => {
       >
         <div className="table-responsive">
           <div className="flex gap-3 mx-6 mb-4">
-            <Input placeholder="Search by username" />
+            <Input
+              className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
+             placeholder="Search by username" />
             <StyledButton>Search</StyledButton>
           </div>
           <ProTable
