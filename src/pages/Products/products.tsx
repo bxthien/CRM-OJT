@@ -29,17 +29,23 @@ const Products = () => {
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
-const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [newProduct, setNewProduct] = useState<ProductType>({
+    urls: [],
     id: '',
     name: '',
     price: 0,
-    urls: [],
-    quantity: 0,
-    categoryId: '',
     url: '',
-    category: { id: '', name: '' },
+    info: {
+      description: '',
+      policy: '',
+    },
+    quantity: 0,
+    createdAt: '',
+    updatedAt: '',
+    photos: [],
+    categoryId: '',
   });
 
   // Handle adding a product
@@ -51,7 +57,6 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       console.error('Failed to add product:', error);
     }
   };
-
   // Handle updating a product
   const handleUpdateProduct = async (updatedProduct: ProductType) => {
     try {
@@ -133,10 +138,10 @@ const [searchQuery, setSearchQuery] = useState<string>('');
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-  
+
     if (query) {
       const filteredProducts = originalProducts.filter((product) =>
-        product.name.toLowerCase().includes(query)
+        product.name.toLowerCase().includes(query),
       );
       setProducts(filteredProducts);
     } else {
@@ -154,10 +159,9 @@ const [searchQuery, setSearchQuery] = useState<string>('');
         console.log('Error fetching products:', err);
       }
     };
-  
+
     fetchProducts();
   }, []);
-  
 
   // Handle image upload
   const handleImageUpload = async (file: any) => {
@@ -194,7 +198,7 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       key: 'image',
       render: (_, row: ProductType) => (
         <img
-          src={row.url}
+          src={row.url || undefined}
           alt={row.name}
           style={{
             width: '50px',

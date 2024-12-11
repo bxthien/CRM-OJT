@@ -1,15 +1,27 @@
 export interface ProductType {
   urls: string[];
-  url: string;
   id: string;
   name: string;
-  category: { id: string; name: string };
-  categoryId?: string;
   price: number;
+  url: string | null;
+  info: {
+    description: string;
+    policy: string;
+  };
   quantity: number;
-  info?: Info;
-  photos?: string[];
+  createdAt: string;
+  updatedAt: string;
+  photos: Photo[];
+  categoryId: string;
 }
+
+export type Photo = {
+  id: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 
 export interface Info {
   url: string;
