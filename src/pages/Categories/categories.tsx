@@ -65,7 +65,7 @@ const Categories = () => {
   }, []);
 
   // Cột của bảng, thêm sự kiện xóa với xác nhận
-  const columns: ProColumns[]  = [
+  const columns: ProColumns[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -95,18 +95,19 @@ const Categories = () => {
   ];
 
   return (
-       <Card
+    <Card
       bordered={false}
       className="circlebox tablespace mb-24 dark:bg-boxdark dark:text-white pt-6 bg-white "
     >
-      <Button
-        type="primary"
-        onClick={() => setIsDrawerOpen(true)}
-        style={{ marginBottom: 16 }}
-        className='mx-6'
-      >
-        Add Category
-      </Button>
+      <div className="flex justify-end mb-4 mx-6">
+        <Button
+          type="primary"
+          onClick={() => setIsDrawerOpen(true)}
+          className="ml-auto"
+        >
+          Add Category
+        </Button>
+      </div>
 
       {/* Modal để thêm danh mục */}
       <Drawer
@@ -125,7 +126,6 @@ const Categories = () => {
           >
             <Input />
           </Form.Item>
-
           <Form.Item>
             <Button type="primary" htmlType="submit" className="w-full">
               Add Category
@@ -134,8 +134,6 @@ const Categories = () => {
         </Form>
       </Drawer>
 
-
-      {/* <Table columns={columns} dataSource={categories} rowKey="id" /> */}
       <ProTable
         columns={columns}
         dataSource={categories}
@@ -147,6 +145,7 @@ const Categories = () => {
         }}
       />
     </Card>
+
   );
 };
 
