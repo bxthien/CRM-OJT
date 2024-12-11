@@ -13,6 +13,16 @@ const instanceAxios = axios.create({
   // timeout: 1000,
 });
 
+export const instanceAxiosFormData = axios.create({
+  baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
+  headers: {
+    'Content-Type': 'multipart/form-data',
+    'Access-Control-Allow-Origin': '*',
+    'ngrok-skip-browser-warning': 'true',
+  },
+  // timeout: 1000,
+});
+
 instanceAxios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (config.url === API_URL.LOGIN) {

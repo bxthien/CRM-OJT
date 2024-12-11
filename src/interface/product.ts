@@ -14,6 +14,14 @@ export interface ProductType {
   description?: string;
 }
 
+export type Photo = {
+  id: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+
 export interface Info {
   url: string;
   description: string;

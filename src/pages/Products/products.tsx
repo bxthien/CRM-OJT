@@ -32,12 +32,10 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [newProduct, setNewProduct] = useState<ProductType>({
+    urls: [],
     id: '',
     name: '',
     price: 0,
-    urls: [],
-    quantity: 0,
-    categoryId: '',
     url: '',
     category: { id: '', name: '' },
     color: [],
@@ -48,14 +46,17 @@ const Products = () => {
   const handleAddProduct = async (newProduct: ProductType) => {
     console.log(newProduct, 'newProduct');
     try {
-      const addedProduct = await addProduct({ ...newProduct, urls: [] });
+      const addedProduct = await addProduct(newProduct);
       // setProducts([...products, addedProduct]);
-      if (addedProduct) fetchProducts();
+      if (addedProduct) {
+        message.success('Product create successfully!');
+        fetchProducts();
+        setIsAddModalOpen(false);
+      }
     } catch (error) {
       console.error('Failed to add product:', error);
     }
   };
-
   // Handle updating a product
   const handleUpdateProduct = async (updatedProduct: ProductType) => {
     try {
@@ -70,6 +71,7 @@ const Products = () => {
             product.id === updatedProduct.id ? updatedData : product,
           ),
         );
+        handleCancel();
       }
     } catch (error) {
       message.error('Failed to update product. Please try again.');
@@ -120,9 +122,13 @@ const Products = () => {
   // Handle selecting an action (view or delete)
   const handleActionOnSelect = async (key: string, product: ProductType) => {
     if (key === ActionKey.VIEW) {
-      await handleActionClick(product.id);
+      if (product.id) {
+        await handleActionClick(product.id);
+      }
     } else if (key === ActionKey.DELETE) {
-      confirmDelete(product.id);
+      if (product.id) {
+        confirmDelete(product.id);
+      }
     }
   };
 
@@ -221,7 +227,7 @@ const Products = () => {
       title: 'Category',
       dataIndex: 'category',
       key: 'category',
-      render: (_, row: ProductType) => <>{row.category?.name}</>, // You can change this if needed to show category name
+      render: (_, row: ProductType) => <>{row.category?.name || 'N/A'}</>, // You can change this if needed to show category name
       width: 200,
     },
     {
