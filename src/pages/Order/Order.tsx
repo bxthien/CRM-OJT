@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Card, Input, Space, message, Modal } from "antd";
+import React, { useEffect, useState } from 'react';
+import { Card, Input, Space, message, Modal } from 'antd';
 import {
   ProTable,
   ProColumns,
   TableDropdown,
-} from "@ant-design/pro-components";
-import Icon, { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import {
-  getOrders,
-  getOrderDetail,
-  deleteOrder,
-} from "../../api/order";
-import { Order } from "../../interface/order";
-import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
-import StyledButton from "../../components/Common/Button";
-import DrawerOrderDetail from "../../components/Modal/ModalOrderDetail";
-import "./order.css";
-import { CiCircleMore } from "react-icons/ci";
+} from '@ant-design/pro-components';
+import Icon, { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { getOrders, getOrderDetail, deleteOrder } from '../../api/order';
+import { Order } from '../../interface/order';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import StyledButton from '../../components/Common/Button';
+import DrawerOrderDetail from '../../components/Modal/ModalOrderDetail';
+import './Order.css';
+import { CiCircleMore } from 'react-icons/ci';
 
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -24,64 +20,69 @@ const Orders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   enum ActionKey {
-    VIEW = "view",
-    DELETE = "delete",
+    VIEW = 'view',
+    DELETE = 'delete',
   }
 
   const columns: ProColumns<Order>[] = [
     {
-      title: "Order ID",
-      dataIndex: "orderId",
-      key: "orderId",
+      title: 'Order ID',
+      dataIndex: 'orderId',
+      key: 'orderId',
       width: 50,
     },
     {
-      title: "Username",
-      dataIndex: "user",
-      key: "username",
+      title: 'Username',
+      dataIndex: 'user',
+      key: 'username',
       render: (_, entity: Order) => entity.user.username,
     },
     {
-      title: "Phone",
-      dataIndex: "user",
-      key: "phone",
+      title: 'Phone',
+      dataIndex: 'user',
+      key: 'phone',
       render: (_, entity: Order) => entity.user.phone,
     },
     {
-      title: "Method",
-      dataIndex: "methodShipping",
-      key: "methodShipping",
+      title: 'Method',
+      dataIndex: 'methodShipping',
+      key: 'methodShipping',
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
       render: (_, entity: Order) =>
         `${entity.address.province}, ${entity.address.district}, ${entity.address.detailedAddress}`,
     },
     {
-      title: "Product Name",
-      dataIndex: "transactions",
-      key: "productName",
+      title: 'Product Name',
+      dataIndex: 'transactions',
+      key: 'productName',
       render: (_, entity: Order) =>
-        entity.transactions.map((t: { product: { name: any; }; }) => t.product.name).join(", "),
+        entity.transactions
+          .map((t: { product: { name: any } }) => t.product.name)
+          .join(', '),
     },
     {
-      title: "Quantity",
-      dataIndex: "transactions",
-      key: "quantity",
+      title: 'Quantity',
+      dataIndex: 'transactions',
+      key: 'quantity',
       render: (_, entity: Order) =>
-        entity.transactions.reduce((sum: any, t: { quantity: any; }) => sum + t.quantity, 0),
+        entity.transactions.reduce(
+          (sum: any, t: { quantity: any }) => sum + t.quantity,
+          0,
+        ),
     },
     {
-      title: "Action",
-      key: "option",
-      fixed: "right",
+      title: 'Action',
+      key: 'option',
+      fixed: 'right',
       width: 50,
       render: (_, row: Order) => (
         <TableDropdown
@@ -121,23 +122,23 @@ const Orders = () => {
         setSelectedOrder(orderDetail);
         setIsModalOpen(true);
       } catch (error) {
-        message.error("Failed to fetch order details!");
-        console.error("Error fetching order detail:", error);
+        message.error('Failed to fetch order details!');
+        console.error('Error fetching order detail:', error);
       }
     } else if (key === ActionKey.DELETE) {
       Modal.confirm({
-        title: "Are you sure you want to delete this order?",
+        title: 'Are you sure you want to delete this order?',
         content: `Order ID: ${order.orderId}`,
-        okText: "Yes, Delete",
-        okType: "danger",
-        cancelText: "No",
+        okText: 'Yes, Delete',
+        okType: 'danger',
+        cancelText: 'No',
         onOk: async () => {
           try {
             await deleteOrder(order.orderId);
-            message.success("Order deleted successfully!");
+            message.success('Order deleted successfully!');
             refreshOrderList();
           } catch (error) {
-            message.error("Failed to delete order!");
+            message.error('Failed to delete order!');
           }
         },
       });
@@ -149,7 +150,7 @@ const Orders = () => {
       const data = await getOrders();
       setOrders(data);
     } catch (error) {
-      console.error("Error refreshing order list:", error);
+      console.error('Error refreshing order list:', error);
     }
   };
 
@@ -158,7 +159,7 @@ const Orders = () => {
       const data = await getOrders();
       setOrders(data);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.error('Error fetching orders:', error);
     }
   };
 
@@ -186,7 +187,8 @@ const Orders = () => {
           <div className="flex gap-3 mx-6 mb-4">
             <Input
               className="max-w-[300px] dark:bg-form-input dark:text-white dark:border-form-strokedark dark:placeholder:text-[#8c8c8c]"
-              placeholder="Search by customer name" />
+              placeholder="Search by customer name"
+            />
             <StyledButton>Search</StyledButton>
           </div>
           <ProTable
