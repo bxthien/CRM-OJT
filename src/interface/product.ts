@@ -1,15 +1,26 @@
 export interface ProductType {
-  urls: string[];
-  url: string;
+  urls?: string[];
+  url?: string;
   id: string;
   name: string;
-  category: { id: string; name: string };
+  category?: { id: string; name: string };
   categoryId?: string;
-  price: number;
-  quantity: number;
+  price?: number;
+  quantity?: number;
   info?: Info;
   photos?: string[];
+  color?: string[];
+  size?: string[];
+  description?: string;
 }
+
+export type Photo = {
+  id: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 
 export interface Info {
   url: string;
@@ -30,7 +41,7 @@ export interface ProductFormValues {
   name: string;
   price: number;
   quantity: number;
-  info: ProductInfo
+  info: ProductInfo;
   url: string;
 }
 

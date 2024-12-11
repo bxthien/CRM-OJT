@@ -3,11 +3,20 @@ import { getStorageData } from '../storage';
 import { API_URL } from '../../constants/url';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants/auth';
 
-
 const instanceAxios = axios.create({
   baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
+    'Access-Control-Allow-Origin': '*',
+    'ngrok-skip-browser-warning': 'true',
+  },
+  // timeout: 1000,
+});
+
+export const instanceAxiosFormData = axios.create({
+  baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
+  headers: {
+    'Content-Type': 'multipart/form-data',
     'Access-Control-Allow-Origin': '*',
     'ngrok-skip-browser-warning': 'true',
   },

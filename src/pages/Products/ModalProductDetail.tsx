@@ -24,7 +24,7 @@ const DrawerProductDetail = ({
   handleOk,
   handleCancel,
 }: Prop) => {
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -55,19 +55,17 @@ const DrawerProductDetail = ({
           uid: `-${index}`,
           name: `image-${index}`,
           status: 'done',
-          url: url
-        }))
+          url: url,
+        })),
       );
       form.setFieldsValue({
         name: product.name,
         price: product.price,
         quantity: product.quantity,
         category: product.category?.id,
-        info: {
-          color: product.info?.color,
-          size: product.info?.size,
-          description: product.info?.description,
-        },
+        color: product?.color,
+        size: product?.size,
+        description: product?.description,
       });
     } else {
       form.resetFields();
@@ -81,6 +79,8 @@ const DrawerProductDetail = ({
     try {
       // Call your upload API
       const response = await uploadImage(file);
+      console.log('object', response.files?.[0].url);
+      setPhotos([response.files?.[0].url]);
       return response;
     } catch (error) {
       message.error(`${file.name} file upload failed.`);
@@ -96,7 +96,7 @@ const DrawerProductDetail = ({
     newFileList = newFileList.slice(-5);
 
     // Process completed uploads
-    newFileList = newFileList.map(file => {
+    newFileList = newFileList.map((file) => {
       if (file.response) {
         // Assuming your API returns an object with a url property
         file.url = file.response.url;
@@ -108,20 +108,22 @@ const DrawerProductDetail = ({
 
     // Update photos with successfully uploaded image URLs
     const uploadedPhotos = newFileList
-      .filter(file => file.status === 'done')
-      .map(file => file.url || file.response?.url)
+      .filter((file) => file.status === 'done')
+      .map((file) => file.url || file.response?.url)
       .filter(Boolean);
 
-    setPhotos(prev => [
-      ...prev.filter(photo => !newFileList.some(file => file.url === photo)),
-      ...uploadedPhotos
+    setPhotos((prev) => [
+      ...prev.filter(
+        (photo) => !newFileList.some((file) => file.url === photo),
+      ),
+      ...uploadedPhotos,
     ]);
   };
 
   // Handle removing photos
   const handleRemovePhoto = (file: UploadFile) => {
-    const newPhotos = photos.filter(photo => 
-      photo !== file.url && photo !== file.response?.url
+    const newPhotos = photos.filter(
+      (photo) => photo !== file.url && photo !== file.response?.url,
     );
     setPhotos(newPhotos);
   };
@@ -130,26 +132,29 @@ const DrawerProductDetail = ({
     const updatedProduct = {
       ...product,
       ...values,
-      photos: photos, // Use the photos state directly
-      category: {
-        id: values.category,
-        name: categories.find((cat) => cat.id === values.category)?.name || '',
-      },
-      info: {
-        ...product?.info,
-        color: values.info.color,
-        size: values.info.size,
-        description: values.info.description,
-      },
+      urls: photos,
+      categoryId: values.category,
+      // id: product?.id,
+      // name: 'Iphone 20',
+      // price: 1000,
+      // description: 'một chiếc iphone thật củ chuối',
+      // urls: [
+      //   'https://res.cloudinary.com/dwmebqzw1/image/upload/v1733925008/t8dz7wldesffbtqudtdz.jpg',
+      // ],
+      // quantity: 10,
+      // categoryId: '33237c4d-849b-4aa8-b9a4-fe2264f28c47',
+      // brandId: 'ef4a9e65-f804-451c-be82-aef9fc390446',
+      // color: ['Red', 'Blue'],
+      // size: ['64GB'],
     };
     handleOk(updatedProduct);
   };
-
 
   return (
     <Drawer
       title="Product Detail"
       placement="right"
+      width={700}
       onClose={handleCancel}
       open={isDrawerOpen}
       className="responsive-drawer"
@@ -200,12 +205,12 @@ const DrawerProductDetail = ({
             label="Category"
             name="category"
             rules={[{ required: true, message: 'Please select a category' }]}
-            className="w-full"
+            className="w-full h-full"
           >
             <Select
               placeholder="Select product category"
               allowClear
-              className="w-full"
+              className="w-full h-full"
             >
               {categories.map((category) => (
                 <Select.Option key={category.id} value={category.id}>
@@ -249,7 +254,7 @@ const DrawerProductDetail = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <Form.Item
             label="Color"
-            name={['info', 'color']}
+            name="color"
             rules={[
               { required: true, message: 'Please select at least one color' },
             ]}
@@ -266,12 +271,20 @@ const DrawerProductDetail = ({
               <Select.Option value="Green">Green</Select.Option>
               <Select.Option value="Yellow">Yellow</Select.Option>
               <Select.Option value="Black">Black</Select.Option>
+              <Select.Option value="White">White</Select.Option>
+              <Select.Option value="Gray">Gray</Select.Option>
+              <Select.Option value="Brown">Brown</Select.Option>
+              <Select.Option value="Pink">Pink</Select.Option>
+              <Select.Option value="Purple">Purple</Select.Option>
+              <Select.Option value="Orange">Orange</Select.Option>
+              <Select.Option value="Gold">Gold</Select.Option>
+              <Select.Option value="Silver">Silver</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             label="Size"
-            name={['info', 'size']}
+            name="size"
             rules={[{ required: true, message: 'Please select a size' }]}
             className="w-full"
           >
@@ -289,35 +302,27 @@ const DrawerProductDetail = ({
             </Select>
           </Form.Item>
         </div>
-        <Form.Item
-          label="Description"
-          name={['info', 'description']}
-          className="w-full"
-        >
+        <Form.Item label="Description" name="description" className="w-full">
           <Input.TextArea
             placeholder="Enter product description"
             className="w-full"
           />
         </Form.Item>
-        <Form.Item label="Images" name="photos" className="w-full">
-          <div className="grid grid-cols-3 gap-4">
-            {photos.length > 0 ? (
-              photos.map((photo, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={photo}
-                    alt={`Product image ${index + 1}`}
-                    className="w-full h-24 object-cover rounded border"
-                  />
-                </div>
-              ))
-            ) : (
-              <p className="col-span-3 text-gray-500">
-                No images uploaded yet.
-              </p>
-            )}
-          </div>
-        </Form.Item>
+        <div className="grid grid-cols-3 gap-4">
+          {product?.urls && product?.urls.length > 0 ? (
+            product?.urls.map((photo, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={photo}
+                  alt={`Product image ${index + 1}`}
+                  className="h-24 w-24 object-cover rounded border"
+                />
+              </div>
+            ))
+          ) : (
+            <p className="col-span-3 text-gray-500">No images uploaded yet.</p>
+          )}
+        </div>
 
         {/* Product Images Section - Responsive */}
         <Form.Item label="Product Images" className="w-full">
@@ -325,9 +330,10 @@ const DrawerProductDetail = ({
             src={product?.url}
             className="w-full md:w-1/2 lg:w-1/3 h-auto object-cover rounded-md mb-4"
           />
+          {/* <ImageUploader/> */}
 
           {/* URL Input - Responsive Flex */}
-           <Upload
+          <Upload
             listType="picture-card"
             fileList={fileList}
             multiple={true}
@@ -353,7 +359,7 @@ const DrawerProductDetail = ({
           </Upload>
 
           {/* Photos Grid - Responsive */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
             {photos.length > 0 ? (
               photos.map((photo, index) => (
                 <div key={index} className="relative">
@@ -369,8 +375,7 @@ const DrawerProductDetail = ({
                 No photos added yet.
               </div>
             )}
-          </div> 
-        
+          </div> */}
         </Form.Item>
       </Form>
     </Drawer>
