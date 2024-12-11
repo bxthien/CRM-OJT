@@ -29,7 +29,7 @@ const Products = () => {
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
-const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [newProduct, setNewProduct] = useState<ProductType>({
     id: '',
@@ -40,6 +40,8 @@ const [searchQuery, setSearchQuery] = useState<string>('');
     categoryId: '',
     url: '',
     category: { id: '', name: '' },
+    color: [],
+    size: [],
   });
 
   // Handle adding a product
@@ -55,16 +57,18 @@ const [searchQuery, setSearchQuery] = useState<string>('');
   // Handle updating a product
   const handleUpdateProduct = async (updatedProduct: ProductType) => {
     try {
-      const updatedData = await updateProduct(
-        updatedProduct.id,
-        updatedProduct,
-      );
-      message.success('Product updated successfully!');
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === updatedProduct.id ? updatedData : product,
-        ),
-      );
+      if (updatedProduct.id) {
+        const updatedData = await updateProduct(
+          updatedProduct.id,
+          updatedProduct,
+        );
+        message.success('Product updated successfully!');
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === updatedProduct.id ? updatedData : product,
+          ),
+        );
+      }
     } catch (error) {
       message.error('Failed to update product. Please try again.');
       console.error('Error updating product:', error);
@@ -133,10 +137,10 @@ const [searchQuery, setSearchQuery] = useState<string>('');
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-  
+
     if (query) {
       const filteredProducts = originalProducts.filter((product) =>
-        product.name.toLowerCase().includes(query)
+        product.name.toLowerCase().includes(query),
       );
       setProducts(filteredProducts);
     } else {
@@ -154,10 +158,9 @@ const [searchQuery, setSearchQuery] = useState<string>('');
         console.log('Error fetching products:', err);
       }
     };
-  
+
     fetchProducts();
   }, []);
-  
 
   // Handle image upload
   const handleImageUpload = async (file: any) => {
@@ -194,7 +197,7 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       key: 'image',
       render: (_, row: ProductType) => (
         <img
-          src={row.url}
+          src={row.urls?.[0]}
           alt={row.name}
           style={{
             width: '50px',
@@ -216,7 +219,7 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       title: 'Category',
       dataIndex: 'category',
       key: 'category',
-      render: (_, row: ProductType) => <>{row.categoryId}</>, // You can change this if needed to show category name
+      render: (_, row: ProductType) => <>{row.category.name}</>, // You can change this if needed to show category name
       width: 200,
     },
     {

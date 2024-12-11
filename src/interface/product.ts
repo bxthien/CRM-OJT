@@ -1,14 +1,17 @@
 export interface ProductType {
-  urls: string[];
-  url: string;
-  id: string;
+  urls?: string[];
+  url?: string;
+  id?: string;
   name: string;
-  category: { id: string; name: string };
+  category?: { id: string; name: string };
   categoryId?: string;
-  price: number;
-  quantity: number;
+  price?: number;
+  quantity?: number;
   info?: Info;
   photos?: string[];
+  color?: string[];
+  size?: string[];
+  description?: string;
 }
 
 export interface Info {
@@ -30,7 +33,7 @@ export interface ProductFormValues {
   name: string;
   price: number;
   quantity: number;
-  info: ProductInfo
+  info: ProductInfo;
   url: string;
 }
 

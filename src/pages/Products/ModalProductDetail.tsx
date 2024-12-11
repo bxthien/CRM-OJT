@@ -63,11 +63,9 @@ const DrawerProductDetail = ({
         price: product.price,
         quantity: product.quantity,
         category: product.category?.id,
-        info: {
-          color: product.info?.color,
-          size: product.info?.size,
-          description: product.info?.description,
-        },
+        color: product?.color,
+        size: product?.size,
+        description: product?.description,
       });
     } else {
       form.resetFields();
@@ -132,17 +130,23 @@ const DrawerProductDetail = ({
     const updatedProduct = {
       ...product,
       ...values,
-      photos: photos, // Use the photos state directly
-      category: {
-        id: values.category,
-        name: categories.find((cat) => cat.id === values.category)?.name || '',
-      },
-      info: {
-        ...product?.info,
-        color: values.info.color,
-        size: values.info.size,
-        description: values.info.description,
-      },
+      urls: photos,
+      categoryId: values.category,
+      color: values.color,
+      size: values.size,
+      description: values.description,
+      // id: product?.id,
+      // name: 'Iphone 20',
+      // price: 1000,
+      // description: 'một chiếc iphone thật củ chuối',
+      // urls: [
+      //   'https://res.cloudinary.com/dwmebqzw1/image/upload/v1733925008/t8dz7wldesffbtqudtdz.jpg',
+      // ],
+      // quantity: 10,
+      // categoryId: '33237c4d-849b-4aa8-b9a4-fe2264f28c47',
+      // brandId: 'ef4a9e65-f804-451c-be82-aef9fc390446',
+      // color: ['Red', 'Blue'],
+      // size: ['64GB'],
     };
     handleOk(updatedProduct);
   };
@@ -151,6 +155,7 @@ const DrawerProductDetail = ({
     <Drawer
       title="Product Detail"
       placement="right"
+      width={700}
       onClose={handleCancel}
       open={isDrawerOpen}
       className="responsive-drawer"
@@ -201,12 +206,12 @@ const DrawerProductDetail = ({
             label="Category"
             name="category"
             rules={[{ required: true, message: 'Please select a category' }]}
-            className="w-full"
+            className="w-full h-full"
           >
             <Select
               placeholder="Select product category"
               allowClear
-              className="w-full"
+              className="w-full h-full"
             >
               {categories.map((category) => (
                 <Select.Option key={category.id} value={category.id}>
@@ -250,7 +255,7 @@ const DrawerProductDetail = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <Form.Item
             label="Color"
-            name={['info', 'color']}
+            name="color"
             rules={[
               { required: true, message: 'Please select at least one color' },
             ]}
@@ -280,7 +285,7 @@ const DrawerProductDetail = ({
 
           <Form.Item
             label="Size"
-            name={['info', 'size']}
+            name="size"
             rules={[{ required: true, message: 'Please select a size' }]}
             className="w-full"
           >
@@ -298,11 +303,7 @@ const DrawerProductDetail = ({
             </Select>
           </Form.Item>
         </div>
-        <Form.Item
-          label="Description"
-          name={['info', 'description']}
-          className="w-full"
-        >
+        <Form.Item label="Description" name="description" className="w-full">
           <Input.TextArea
             placeholder="Enter product description"
             className="w-full"
