@@ -96,13 +96,14 @@ const Categories = () => {
 
   return (
     <div>
-      <Button
-        type="primary"
-        onClick={() => setIsModalOpen(true)}
-        style={{ marginBottom: 16 }}
-      >
-        Add Category
-      </Button>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <Button
+          type="primary"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Add Category
+        </Button>
+      </div>
 
       {/* Modal để thêm danh mục */}
       <Modal
@@ -126,6 +127,7 @@ const Categories = () => {
 
       <Table columns={columns} dataSource={categories} rowKey="id" />
     </div>
+
   );
 };
 

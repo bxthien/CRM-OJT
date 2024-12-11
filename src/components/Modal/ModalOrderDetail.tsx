@@ -87,10 +87,6 @@ const DrawerOrderDetail = ({ order, isDrawerOpen, handleCancel }: Prop) => {
           <Input readOnly />
         </Form.Item>
 
-        <Form.Item label="Product Info" name="productInfo">
-          <Input.TextArea readOnly rows={2} />
-        </Form.Item>
-
         <Form.Item label="Total Price" name="totalPrice">
           <Input readOnly />
         </Form.Item>

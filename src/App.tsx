@@ -41,7 +41,9 @@ function App() {
       <Routes>
         <Route index path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/categories" element={<Categories />} />
+        <Route path="/categories" element={userRole === "seller" 
+          ? <Navigate to="/" replace /> 
+          : <Categories />}  />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/forms/form-elements" element={<FormElements />} />
