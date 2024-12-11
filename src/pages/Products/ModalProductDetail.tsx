@@ -79,6 +79,8 @@ const DrawerProductDetail = ({
     try {
       // Call your upload API
       const response = await uploadImage(file);
+      console.log('object', response.files?.[0].url);
+      setPhotos([response.files?.[0].url]);
       return response;
     } catch (error) {
       message.error(`${file.name} file upload failed.`);
@@ -306,25 +308,21 @@ const DrawerProductDetail = ({
             className="w-full"
           />
         </Form.Item>
-        <Form.Item label="Images" name="photos" className="w-full">
-          <div className="grid grid-cols-3 gap-4">
-            {photos.length > 0 ? (
-              photos.map((photo, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={photo}
-                    alt={`Product image ${index + 1}`}
-                    className="w-full h-24 object-cover rounded border"
-                  />
-                </div>
-              ))
-            ) : (
-              <p className="col-span-3 text-gray-500">
-                No images uploaded yet.
-              </p>
-            )}
-          </div>
-        </Form.Item>
+        <div className="grid grid-cols-3 gap-4">
+          {product?.urls && product?.urls.length > 0 ? (
+            product?.urls.map((photo, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={photo}
+                  alt={`Product image ${index + 1}`}
+                  className="h-24 w-24 object-cover rounded border"
+                />
+              </div>
+            ))
+          ) : (
+            <p className="col-span-3 text-gray-500">No images uploaded yet.</p>
+          )}
+        </div>
 
         {/* Product Images Section - Responsive */}
         <Form.Item label="Product Images" className="w-full">
@@ -332,6 +330,7 @@ const DrawerProductDetail = ({
             src={product?.url}
             className="w-full md:w-1/2 lg:w-1/3 h-auto object-cover rounded-md mb-4"
           />
+          {/* <ImageUploader/> */}
 
           {/* URL Input - Responsive Flex */}
           <Upload
@@ -360,7 +359,7 @@ const DrawerProductDetail = ({
           </Upload>
 
           {/* Photos Grid - Responsive */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
             {photos.length > 0 ? (
               photos.map((photo, index) => (
                 <div key={index} className="relative">
@@ -376,7 +375,7 @@ const DrawerProductDetail = ({
                 No photos added yet.
               </div>
             )}
-          </div>
+          </div> */}
         </Form.Item>
       </Form>
     </Drawer>

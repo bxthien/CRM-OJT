@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Drawer, Form, Input, InputNumber, Upload, Button, Select } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import {
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Upload,
+  Button,
+  Select,
+  message,
+} from 'antd';
 import { ProductType, CategoryType } from '../../interface/product';
 import { getCategories } from '../../api/categories';
 import { uploadImage } from '../../api/product';
+import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload';
+import { PlusOutlined } from '@ant-design/icons';
 
 interface AddProductDrawerProps {
   isDrawerOpen: boolean;
@@ -22,6 +32,9 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
 }) => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [photos, setPhotos] = useState<string[]>([]);
+
   // Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
@@ -77,8 +90,59 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
     // }
     // // Submit product
     // console.log('Submitting product:', newProduct);
-    handleAddProduct(values);
+    handleAddProduct({ ...values, urls: photos });
     // console.log('Form Values:', values);
+  };
+
+  const handleUpload = async (file: RcFile) => {
+    try {
+      // Call your upload API
+      const response = await uploadImage(file);
+      console.log('object', response.files?.[0].url);
+      setPhotos([response.files?.[0].url]);
+      return response;
+    } catch (error) {
+      message.error(`${file.name} file upload failed.`);
+      throw error;
+    }
+  };
+
+  const handleChange = (info: UploadChangeParam<UploadFile>) => {
+    let newFileList = [...info.fileList];
+
+    // Limit to 5 files
+    newFileList = newFileList.slice(-5);
+
+    // Process completed uploads
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        // Assuming your API returns an object with a url property
+        file.url = file.response.url;
+      }
+      return file;
+    });
+
+    setFileList(newFileList);
+
+    // Update photos with successfully uploaded image URLs
+    const uploadedPhotos = newFileList
+      .filter((file) => file.status === 'done')
+      .map((file) => file.url || file.response?.url)
+      .filter(Boolean);
+
+    setPhotos((prev) => [
+      ...prev.filter(
+        (photo) => !newFileList.some((file) => file.url === photo),
+      ),
+      ...uploadedPhotos,
+    ]);
+  };
+
+  const handleRemovePhoto = (file: UploadFile) => {
+    const newPhotos = photos.filter(
+      (photo) => photo !== file.url && photo !== file.response?.url,
+    );
+    setPhotos(newPhotos);
   };
 
   return (
@@ -203,32 +267,51 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
 
         {/* Fourth row - responsive grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <Form.Item label="Upload Image" className="w-full">
+          <Form.Item label="Product Images" className="w-full">
+            {/* URL Input - Responsive Flex */}
             <Upload
-              beforeUpload={() => false}
-              onChange={(info) => {
-                if (info.file.originFileObj) {
-                  const file = info.file.originFileObj;
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setNewProduct((prev) => ({
-                      ...prev,
-                      url: reader.result as string,
-                    }));
-                  };
-                  reader.readAsDataURL(file);
-                }
+              listType="picture-card"
+              fileList={fileList}
+              multiple={true}
+              maxCount={5}
+              customRequest={({ file, onSuccess, onError }) => {
+                handleUpload(file as RcFile)
+                  .then((response) => {
+                    onSuccess?.(response);
+                  })
+                  .catch((error) => {
+                    onError?.(error);
+                  });
               }}
+              onChange={handleChange}
+              onRemove={handleRemovePhoto}
             >
-              <Button icon={<UploadOutlined />}>Upload Image</Button>
+              {fileList.length < 5 && (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              )}
             </Upload>
-            {newProduct?.urls && newProduct?.urls.length > 0 && (
-              <img
-                src={newProduct?.urls?.[0]}
-                alt="Preview"
-                className="mt-2 max-h-24 w-auto object-cover"
-              />
+
+            {/* Photos Grid - Responsive */}
+            {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+            {photos.length > 0 ? (
+              photos.map((photo, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={photo}
+                    alt={`Product Photo ${index + 1}`}
+                    className="w-full h-24 object-cover border rounded"
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-500">
+                No photos added yet.
+              </div>
             )}
+          </div> */}
           </Form.Item>
         </div>
 
