@@ -46,9 +46,11 @@ const Products = () => {
 
   // Handle adding a product
   const handleAddProduct = async (newProduct: ProductType) => {
+    console.log(newProduct, 'newProduct');
     try {
-      const addedProduct = await addProduct(newProduct);
-      setProducts([...products, addedProduct]);
+      const addedProduct = await addProduct({ ...newProduct, urls: [] });
+      // setProducts([...products, addedProduct]);
+      if (addedProduct) fetchProducts();
     } catch (error) {
       console.error('Failed to add product:', error);
     }
@@ -148,17 +150,17 @@ const Products = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await getProduct();
-        setProducts(data);
-        setOriginalProducts(data);
-      } catch (err) {
-        console.log('Error fetching products:', err);
-      }
-    };
+  const fetchProducts = async () => {
+    try {
+      const { data } = await getProduct();
+      setProducts(data);
+      setOriginalProducts(data);
+    } catch (err) {
+      console.log('Error fetching products:', err);
+    }
+  };
 
+  useEffect(() => {
     fetchProducts();
   }, []);
 
@@ -219,7 +221,7 @@ const Products = () => {
       title: 'Category',
       dataIndex: 'category',
       key: 'category',
-      render: (_, row: ProductType) => <>{row.category.name}</>, // You can change this if needed to show category name
+      render: (_, row: ProductType) => <>{row.category?.name}</>, // You can change this if needed to show category name
       width: 200,
     },
     {
@@ -278,6 +280,13 @@ const Products = () => {
         handleOk={handleUpdateProduct}
         handleCancel={handleCancel}
       />
+      <AddProductDrawer
+        isDrawerOpen={isAddModalOpen}
+        handleAddProduct={handleAddProduct}
+        handleCancel={() => setIsAddModalOpen(false)}
+        setNewProduct={setNewProduct}
+        newProduct={newProduct}
+      />
       <Breadcrumb pageName="Products" />
       <Card
         bordered={false}
@@ -308,13 +317,6 @@ const Products = () => {
           />
         </div>
       </Card>
-      <AddProductDrawer
-        isDrawerOpen={isAddModalOpen}
-        handleAddProduct={() => handleAddProduct(newProduct)}
-        handleCancel={() => setIsAddModalOpen(false)}
-        setNewProduct={setNewProduct}
-        newProduct={newProduct}
-      />
     </div>
   );
 };

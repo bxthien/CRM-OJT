@@ -1,7 +1,7 @@
 export interface ProductType {
   urls?: string[];
   url?: string;
-  id?: string;
+  id: string;
   name: string;
   category?: { id: string; name: string };
   categoryId?: string;

@@ -7,7 +7,7 @@ import { uploadImage } from '../../api/product';
 
 interface AddProductDrawerProps {
   isDrawerOpen: boolean;
-  handleAddProduct: () => void;
+  handleAddProduct: (newProduct: ProductType) => void;
   handleCancel: () => void;
   setNewProduct: React.Dispatch<React.SetStateAction<ProductType>>;
   newProduct: ProductType;
@@ -21,7 +21,7 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
   newProduct,
 }) => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
-
+  const [form] = Form.useForm();
   // Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
@@ -61,24 +61,24 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
     return false; // Prevent default upload behavior
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (values) => {
     // Validate data before submission
-    if (!Array.isArray(newProduct.urls) || newProduct.urls.length === 0) {
-      console.error('Invalid URLs: must be a non-empty array');
-      return;
-    }
-    if (typeof newProduct.info !== 'object') {
-      console.error('Invalid Info: must be an object');
-      return;
-    }
-    if (!Array.isArray(newProduct.info)) {
-      console.error('Invalid Variants: must be an array');
-      return;
-    }
-
-    // Submit product
-    console.log('Submitting product:', newProduct);
-    handleAddProduct();
+    // if (!Array.isArray(newProduct.urls) || newProduct.urls.length === 0) {
+    //   console.error('Invalid URLs: must be a non-empty array');
+    //   return;
+    // }
+    // if (typeof newProduct.info !== 'object') {
+    //   console.error('Invalid Info: must be an object');
+    //   return;
+    // }
+    // if (!Array.isArray(newProduct.info)) {
+    //   console.error('Invalid Variants: must be an array');
+    //   return;
+    // }
+    // // Submit product
+    // console.log('Submitting product:', newProduct);
+    handleAddProduct(values);
+    // console.log('Form Values:', values);
   };
 
   return (
@@ -88,25 +88,31 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
       onClose={handleCancel}
       open={isDrawerOpen}
       className="responsive-drawer"
+      width={700}
     >
-      <Form layout="vertical" onFinish={handleAddProduct}>
+      <Form layout="vertical" onFinish={handleSubmit} form={form}>
         {/* First row - responsive grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <Form.Item label="Product Name" required className="w-full">
+          <Form.Item
+            label="Product Name"
+            name="name"
+            required
+            className="w-full"
+          >
             <Input
               placeholder="Enter product name"
-              value={newProduct.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
+              // value={newProduct.name}
+              // onChange={(e) => handleInputChange('name', e.target.value)}
               className="w-full"
             />
           </Form.Item>
 
-          <Form.Item label="Price" required className="w-full">
+          <Form.Item label="Price" name="price" required className="w-full">
             <InputNumber
               placeholder="Enter price"
               value={newProduct.price}
               min={0}
-              onChange={(value) => handleInputChange('price', value)}
+              // onChange={(value) => handleInputChange('price', value)}
               className="w-full"
             />
           </Form.Item>
@@ -114,21 +120,31 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
 
         {/* Second row - responsive grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <Form.Item label="Quantity" required className="w-full">
+          <Form.Item
+            label="Quantity"
+            name="quantity"
+            required
+            className="w-full"
+          >
             <InputNumber
               placeholder="Enter quantity"
               value={newProduct.quantity}
               min={0}
-              onChange={(value) => handleInputChange('quantity', value)}
+              // onChange={(value) => handleInputChange('quantity', value)}
               className="w-full"
             />
           </Form.Item>
 
-          <Form.Item label="Category" required className="w-full">
+          <Form.Item
+            label="Category"
+            name="categoryId"
+            required
+            className="w-full"
+          >
             <Select
               placeholder="Select category"
               value={newProduct.categoryId}
-              onChange={(value) => handleInputChange('categoryId', value)}
+              // onChange={(value) => handleInputChange('categoryId', value)}
               className="w-full"
             >
               {categories.map((cat) => (
@@ -142,15 +158,15 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
 
         {/* Third row - responsive grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <Form.Item label="Color" required className="w-full">
+          <Form.Item label="Color" required name="color" className="w-full">
             <Select
               mode="multiple"
               placeholder="Select product color(s)"
               allowClear
               className="w-full"
-              onChange={(value) =>
-                handleInputChange('info', [{ color: value }])
-              }
+              // onChange={(value) =>
+              //   handleInputChange('info', [{ color: value }])
+              // }
             >
               <Select.Option value="Red">Red</Select.Option>
               <Select.Option value="Blue">Blue</Select.Option>
@@ -168,15 +184,13 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
             </Select>
           </Form.Item>
 
-          <Form.Item label="Size" required className="w-full">
+          <Form.Item label="Size" name="size" required className="w-full">
             <Select
               mode="multiple"
               placeholder="Select product size"
               allowClear
               className="w-full"
-              onChange={(value) =>
-                handleInputChange('info', [{ size: value }])
-              }
+              onChange={(value) => handleInputChange('info', [{ size: value }])}
             >
               <Select.Option value="64GB">64GB</Select.Option>
               <Select.Option value="128GB">128GB</Select.Option>
@@ -208,9 +222,9 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
             >
               <Button icon={<UploadOutlined />}>Upload Image</Button>
             </Upload>
-            {newProduct.urls?.length > 0 && (
+            {newProduct?.urls && newProduct?.urls.length > 0 && (
               <img
-                src={newProduct.urls[0]}
+                src={newProduct?.urls?.[0]}
                 alt="Preview"
                 className="mt-2 max-h-24 w-auto object-cover"
               />
@@ -219,7 +233,7 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
         </div>
 
         {/* Full width description */}
-        <Form.Item label="Description" className="w-full">
+        <Form.Item label="Description" name="description" className="w-full">
           <Input.TextArea
             placeholder="Enter product description"
             value={newProduct.info?.description || ''}
