@@ -1,49 +1,50 @@
 /* order.css */
 
 .ant-card .ant-card-head {
-    border: none;
-  }
-  
-  .dark .ant-table-thead tr > th {
-    background-color: #2e3a47;
-    color: #8c8c8c;
-  }
-  
-  .dark .ant-table-tbody tr > td {
-    color: white !important;
-  }
-  
-  .ant-table-tbody tr > td {
-    background-color: #1e293b;
-  }
-  
-  .ant-table-tbody .ant-table-row > .ant-table-cell-row-hover {
-    background-color: #2e3a47;
-  }
-  
-  .dark .ant-table-tbody > tr > td {
-    border-bottom: 1px solid #2e3a47; /* Dark mode */
-  }
-  
-  .ant-spin-container,
-  .ant-pro-card {
-    background-color: #1e293b;
-  }
-  
-  .dark .ant-table-thead > tr > th {
-    border-bottom: 1px solid #2e3a47;
-  }
-  
-  .dark .tablespace .ant-card-head-title {
-    color: white;
-  }
-  
-  .ant-card .ant-card-head,
-  .ant-table-thead tr > th,
-  .ant-table-tbody tr > td,
-  .ant-spin-container,
-  .ant-pro-card,
-  .tablespace .ant-card-head-title {
-    transition: color 0.3s ease, background-color 0.3s ease;
-  }
-  
+  border: none;
+}
+
+.dark .ant-table-thead tr > th {
+  background-color: #2e3a47;
+  color: #8c8c8c;
+}
+
+.dark .ant-table-tbody tr > td {
+  color: white !important;
+}
+
+.ant-table-tbody tr > td {
+  background-color: #1e293b;
+}
+
+.ant-table-tbody .ant-table-row > .ant-table-cell-row-hover {
+  background-color: #2e3a47;
+}
+
+.dark .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #2e3a47; /* Dark mode */
+}
+
+.ant-spin-container,
+.ant-pro-card {
+  background-color: #1e293b;
+}
+
+.dark .ant-table-thead > tr > th {
+  border-bottom: 1px solid #2e3a47;
+}
+
+.dark .tablespace .ant-card-head-title {
+  color: white;
+}
+
+.ant-card .ant-card-head,
+.ant-table-thead tr > th,
+.ant-table-tbody tr > td,
+.ant-spin-container,
+.ant-pro-card,
+.tablespace .ant-card-head-title {
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
