@@ -37,15 +37,9 @@ const Products = () => {
     name: '',
     price: 0,
     url: '',
-    info: {
-      description: '',
-      policy: '',
-    },
-    quantity: 0,
-    createdAt: '',
-    updatedAt: '',
-    photos: [],
-    categoryId: '',
+    category: { id: '', name: '' },
+    color: [],
+    size: [],
   });
 
   // Handle adding a product
@@ -60,16 +54,18 @@ const Products = () => {
   // Handle updating a product
   const handleUpdateProduct = async (updatedProduct: ProductType) => {
     try {
-      const updatedData = await updateProduct(
-        updatedProduct.id,
-        updatedProduct,
-      );
-      message.success('Product updated successfully!');
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === updatedProduct.id ? updatedData : product,
-        ),
-      );
+      if (updatedProduct.id) {
+        const updatedData = await updateProduct(
+          updatedProduct.id,
+          updatedProduct,
+        );
+        message.success('Product updated successfully!');
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === updatedProduct.id ? updatedData : product,
+          ),
+        );
+      }
     } catch (error) {
       message.error('Failed to update product. Please try again.');
       console.error('Error updating product:', error);
@@ -119,9 +115,13 @@ const Products = () => {
   // Handle selecting an action (view or delete)
   const handleActionOnSelect = async (key: string, product: ProductType) => {
     if (key === ActionKey.VIEW) {
-      await handleActionClick(product.id);
+      if (product.id) {
+        await handleActionClick(product.id);
+      }
     } else if (key === ActionKey.DELETE) {
-      confirmDelete(product.id);
+      if (product.id) {
+        confirmDelete(product.id);
+      }
     }
   };
 
@@ -198,7 +198,7 @@ const Products = () => {
       key: 'image',
       render: (_, row: ProductType) => (
         <img
-          src={row.url || undefined}
+          src={row.urls?.[0]}
           alt={row.name}
           style={{
             width: '50px',
@@ -220,7 +220,7 @@ const Products = () => {
       title: 'Category',
       dataIndex: 'category',
       key: 'category',
-      render: (_, row: ProductType) => <>{row.categoryId}</>, // You can change this if needed to show category name
+      render: (_, row: ProductType) => <>{row.category?.name || 'N/A'}</>, // You can change this if needed to show category name
       width: 200,
     },
     {

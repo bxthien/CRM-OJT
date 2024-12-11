@@ -208,7 +208,7 @@ const AddProductDrawer: React.FC<AddProductDrawerProps> = ({
             >
               <Button icon={<UploadOutlined />}>Upload Image</Button>
             </Upload>
-            {newProduct.urls?.length > 0 && (
+            {newProduct.urls && newProduct.urls.length > 0 && (
               <img
                 src={newProduct.urls[0]}
                 alt="Preview"
