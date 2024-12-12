@@ -4,7 +4,7 @@ import { API_URL } from '../../constants/url';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants/auth';
 
 const instanceAxios = axios.create({
-  baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
+  baseURL: 'https://be-final-project-bddr.onrender.com/',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'Access-Control-Allow-Origin': '*',
@@ -14,7 +14,7 @@ const instanceAxios = axios.create({
 });
 
 export const instanceAxiosFormData = axios.create({
-  baseURL: 'https://zq66ssqv-3000.asse.devtunnels.ms/',
+  baseURL: 'https://be-final-project-bddr.onrender.com/',
   headers: {
     'Content-Type': 'multipart/form-data',
     'Access-Control-Allow-Origin': '*',
